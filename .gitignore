@@ -1,5 +1,9 @@
 # cmake
 cmake-build-debug
+./smallkv/cmake-build-debug
+./test/cmake-build-debug
+test/CMakeCache.txt
+test/CMakeFiles
 
 # IDE
 .idea
