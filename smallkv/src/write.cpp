@@ -3,3 +3,7 @@
 //
 
 #include "write.h"
+
+namespace smallkv {
+
+}
