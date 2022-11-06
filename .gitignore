@@ -10,3 +10,4 @@ test/CMakeFiles
 
 # others
 ref
+build/*
