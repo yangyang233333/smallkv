@@ -10,7 +10,6 @@ namespace smallkv {
     class BloomFilter final : public FilterPolicy {
     public:
         BloomFilter() = default;
-
         explicit BloomFilter(int32_t bits_per_key);
 
         std::string name() override;
