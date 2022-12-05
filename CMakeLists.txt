@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_FLAGS "-Werror -Wextra")
 #set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
 
+# spdlog
+include_directories(3rdparty/spdlog/include)
+
 include_directories(src) # 头文件搜索目录
 file(GLOB_RECURSE SRC src/*.cpp) # 找出源文件
 add_executable(${PROJECT_NAME} ${SRC}) # 编译成动态库
@@ -15,5 +18,3 @@ add_executable(${PROJECT_NAME} ${SRC}) # 编译成动态库
 # 链接
 find_library(PTHREAD pthread)
 target_link_libraries(${PROJECT_NAME} ${PTHREAD})
-find_library(SPDLOG spdlog)
-target_link_libraries(${PROJECT_NAME} ${SPDLOG})
