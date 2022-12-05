@@ -14,13 +14,16 @@
 #include <cmath>
 #include <memory>
 #include <cassert>
+
+#include "utils/murmur_hash2.h"
 #include "spdlog/spdlog.h"
 
 using namespace std;
 
 int main() {
     spdlog::info("Hello");
-
+    auto h = smallkv::murmur_hash2("123", 3);
+    spdlog::info(h);
     return 0;
 }
 
