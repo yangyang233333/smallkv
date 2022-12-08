@@ -1,3 +1,3 @@
 git add --all
-git commit -m "backup"
+git commit -m "back-up"
 git push
