@@ -1,6 +1,8 @@
 //
 // Created by abc on 2022/12/5.
 //
+#include <cstdint>
+#include <string>
 #include "filter_policy.h"
 
 #ifndef SMALLKV_BLOOM_FILTER_H
@@ -10,9 +12,8 @@ namespace smallkv {
     class BloomFilter final : public FilterPolicy {
     public:
         BloomFilter() = default;
-        explicit BloomFilter(int32_t bits_per_key);
 
-        std::string name() override;
+        explicit BloomFilter(int32_t bits_per_key);
 
         void create_filter() override;
 

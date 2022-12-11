@@ -8,6 +8,9 @@ test/CMakeFiles
 # IDE
 .idea
 
+# test_temp
+test_temp
+
 # others
 ref
 build/*

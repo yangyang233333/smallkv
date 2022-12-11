@@ -15,10 +15,6 @@ namespace smallkv {
         }
     }
 
-    std::string BloomFilter::name() {
-        return "BloomFilter";
-    }
-
     void BloomFilter::create_filter() {
 
     }

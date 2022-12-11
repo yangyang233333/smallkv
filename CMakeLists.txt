@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(smallkv)
+project(smallkv LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -7,14 +7,16 @@ set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_CXX_FLAGS "-Werror -Wextra")
 #set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
+option(SMALLKV-UNITTEST "build unit-test" OFF)
 
-# spdlog
-include_directories(3rdparty/spdlog/include)
+include_directories(3rdparty/spdlog/include)# spdlog
+include_directories(src)
 
-include_directories(src) # 头文件搜索目录
-file(GLOB_RECURSE SRC src/*.cpp) # 找出源文件
-add_executable(${PROJECT_NAME} ${SRC}) # 编译成动态库
-
-# 链接
+file(GLOB_RECURSE SRC src/*.cpp)
+add_executable(${PROJECT_NAME} ${SRC})
 find_library(PTHREAD pthread)
 target_link_libraries(${PROJECT_NAME} ${PTHREAD})
+if (SMALLKV-UNITTEST)
+    enable_testing()
+    add_subdirectory(3rdparty/googletest)
+endif (SMALLKV-UNITTEST)
