@@ -18,6 +18,7 @@
 #include "utils/murmur_hash2.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "log/log.h"
 using namespace std;
 
 int main() {
@@ -33,8 +34,9 @@ int main() {
     }
     cout << a.size() << endl;
 
-    auto logger = spdlog::stdout_color_mt("console");
-    logger->info("hello");
+
+    auto logger = smallkv::get_logger();
+    logger->info("Hello *****----");
     return 0;
 }
 
