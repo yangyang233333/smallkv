@@ -1,12 +1,12 @@
 //
-// Created by abc on 2022/12/5.
+// Created by qianyy on 2022/12/5.
 //
 
 #include "murmur_hash2.h"
 
 namespace smallkv {
     uint32_t murmur_hash2(const void *key, int len) {
-        // 'm' and 'r' are mixing constants generated offline.
+        // '__mutex' and 'r' are mixing constants generated offline.
         // They're not really 'magic', they just happen to work well.
         static constexpr uint32_t seed = 0xbc451d34;
         static constexpr uint32_t m = 0x5bd1e995;
