@@ -12,15 +12,17 @@
 - [ ] Compact
 
 ## build
-
-
+```shell
+./build.sh
+./run.sh
+```
 
 ## 第三方依赖：
 1. [spdlog](https://github.com/gabime/spdlog)
 2. [gtest](https://github.com/google/googletest)
 
 
-## 参考来源：
-1. corekv
-2. leveldb
-3. ... 
+## 参考项目：
+1. [阿里云NewSQL数据库大赛](https://tianchi.aliyun.com/competition/entrance/531980/introduction)
+2. [corekv](https://github.com/hardcore-os/coreKV-CPP)
+3. [leveldb](https://github.com/google/leveldb)
