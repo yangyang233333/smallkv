@@ -3,11 +3,11 @@ project(smallkv LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-march=native -ffast-math)
-set(CMAKE_BUILD_TYPE Release)
+#add_compile_options(-march=native -ffast-math)
+#set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_CXX_FLAGS "-Werror -Wextra")
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
-option(SMALLKV-UNITTEST "build unit-test" OFF)
+#set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
+option(SMALLKV-UNITTEST "build unit-test" ON)
 
 include_directories(3rdparty/spdlog/include)# spdlog
 include_directories(src)
@@ -19,5 +19,8 @@ target_link_libraries(${PROJECT_NAME} ${PTHREAD})
 
 if (SMALLKV-UNITTEST)
     enable_testing()
-    add_subdirectory(3rdparty/googletest)
+    file(GLOB_RECURSE SRC_WITHOUT_MAIN src/filter/*.cpp src/log/*.cpp src/utils/*.cpp)
+    file(GLOB_RECURSE SRC_TEST tests/*.cpp)
+    add_executable(smallkv-unitest ${SRC_WITHOUT_MAIN} ${SRC_TEST})
+    target_link_libraries(smallkv-unitest libgtest.so)
 endif (SMALLKV-UNITTEST)

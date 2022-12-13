@@ -4,7 +4,7 @@
 #include <mutex>
 #include "log.h"
 
-namespace smallkv {
+namespace smallkv::log {
     std::shared_ptr<spdlog::logger> logger = nullptr;
     std::mutex _mutex;
 

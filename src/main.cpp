@@ -19,24 +19,34 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "log/log.h"
+#include "filter/filter_policy.h"
+#include "filter/bloom_filter.h"
+
 using namespace std;
 
 int main() {
-    spdlog::info("Hello");
-    auto h = smallkv::murmur_hash2("123", 3);
-    spdlog::info(h);
 
-
-    vector<uint8_t> a;
-    cout << a.size() << endl;
-    for (int i = 0; i < 2000 * 10000; ++i) {
-        a.resize(i, 1);
+    auto logger = smallkv::log::get_logger();
+//    auto h = smallkv::utils::murmur_hash2("123", 3);
+//    logger->info(h);
+//    string aaa = "123";
+//    h = smallkv::utils::murmur_hash2(aaa.c_str(), aaa.size());
+//    logger->info(h);
+    std::unique_ptr<smallkv::FilterPolicy> filterPolicy = std::make_unique<smallkv::BloomFilter>(10 * 10000, 0.01);
+    std::vector<std::string> data;
+    //插入10w
+    for (int i = 0; i < 10 * 10000; ++i) {
+        data.push_back("key_" + std::to_string(i));
     }
-    cout << a.size() << endl;
+    filterPolicy->create_filter(data);
+    int cnt = 0;
+    for (int i = 0; i < 20 * 10000; ++i) {
+        if (filterPolicy->exists("key_" + std::to_string(i))) {
+            ++cnt;
+        }
+    }
+    logger->info("cnt=" + to_string(cnt));
 
-
-    auto logger = smallkv::get_logger();
-    logger->info("Hello *****----");
     return 0;
 }
 

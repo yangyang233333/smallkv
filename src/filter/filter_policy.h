@@ -19,7 +19,7 @@ namespace smallkv {
         virtual void create_filter(const std::vector<std::string> &keys) = 0;
 
         // 检查是否存在，如果为false表示一定不存在，true表示可能存在
-        virtual bool match() = 0;
+        virtual bool exists(const std::string_view &key) = 0;
 
         virtual uint64_t size() = 0;
 

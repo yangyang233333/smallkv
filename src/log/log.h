@@ -8,7 +8,7 @@
 #ifndef SMALLKV_LOG_H
 #define SMALLKV_LOG_H
 
-namespace smallkv {
+namespace smallkv::log {
     std::shared_ptr<spdlog::logger> get_logger();
 }
 

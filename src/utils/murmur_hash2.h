@@ -6,8 +6,8 @@
 #ifndef SMALLKV_MURMUR_HASH2_H
 #define SMALLKV_MURMUR_HASH2_H
 
-namespace smallkv {
-    uint32_t murmur_hash2(const void *key, int len);
+namespace smallkv::utils {
+    uint32_t murmur_hash2(const void *key, uint32_t len);
 }
 
 #endif //SMALLKV_MURMUR_HASH2_H
