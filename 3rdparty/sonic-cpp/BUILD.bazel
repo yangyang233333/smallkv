@@ -1,0 +1,113 @@
+package(default_visibility = ["//visibility:public"])
+
+common_copts = ['-mavx2', '-mbmi', '-mpclmul']
+sanitize_copts = ['-fsanitize=address,undefined', '-fsanitize-recover=address']
+
+cc_library(
+    name = "string_view",
+    hdrs = glob(["include/thirdparty/**/*.h"]),
+)
+
+cc_library(
+    name = "sonic-cpp",
+    hdrs = glob(["include/sonic/**/*.h"]),
+    deps = [":string_view"],
+    includes = ["include"],
+)
+
+cc_binary(
+    name = "benchmark",
+    srcs = glob([
+            "benchmark/*.cpp",
+            "benchmark/*.h",
+            "benchmark/*.hpp",
+    ]),
+    data = glob(["testdata/*.json"]),
+    deps = [
+        ":sonic-cpp",
+        "@google_benchmark//:benchmark",
+        "@rapidjson",
+        "@cJSON",
+        "@yyjson",
+        "@simdjson",
+    ],
+    copts = common_copts + ['-DNDEBUG', '-std=c++17'],
+    linkopts = ['-lstdc++fs'],
+)
+
+cc_test(
+    name = "unittest-gcc",
+    srcs = glob([
+            "tests/*.h",
+            "tests/*.cpp",
+            "include/sonic/*",
+            "include/sonic/**/*",
+        ]),
+    deps = [ 
+        ":string_view",
+        "@gtest//:gtest_main",
+    ],
+    data = glob([ "testdata/*.json"]),
+    linkopts = sanitize_copts + [
+        '-lstdc++fs',
+        '-fstack-protector-all',
+        '-lasan'
+    ],
+    copts = common_copts + sanitize_copts + [
+        '-O3', '-g', '-UNDEBUG', '-std=c++14',
+        '-fstack-protector-all',
+        '-Iinclude', '-Wall', '-Wextra', '-Werror',
+    ],
+)
+
+cc_test(
+    name = "unittest-clang",
+    srcs = glob([
+            "tests/*.h",
+            "tests/*.cpp",
+            "include/sonic/*",
+            "include/sonic/**/*",
+        ]),
+    deps = [ 
+        ":string_view",
+        "@gtest//:gtest_main",
+    ],
+    data = glob([ "testdata/*.json"]),
+    linkopts = sanitize_copts + [
+        '-lstdc++fs',
+        '-fstack-protector-all',
+        '-fsanitize-link-c++-runtime'
+    ],
+    copts = common_copts + sanitize_copts + [
+        '-O3', '-g', '-UNDEBUG', '-std=c++14',
+        '-fstack-protector-all',
+        '-Iinclude', '-Wall', '-Wextra', '-Werror',
+    ],
+)
+
+cc_test(
+    name = "unittest-gcc-coverage",
+    srcs = glob([
+        "tests/*.cpp",
+        "tests/*.h",
+        "include/sonic/*",
+        "include/sonic/**/*",
+    ]),
+    deps = [
+        "@gtest//:gtest_main",
+    ],
+    data = glob([
+        "testdata/*.json",
+        "testdata/num/*",
+    ]),
+    linkopts = [
+        '-lstdc++fs', '-lgcov',
+        '-fprofile-arcs', '-ftest-coverage',
+    ],
+    copts = common_copts + [
+        '-O0', '-g', '-UNDEBUG', '-std=c++17',
+        '-Iinclude',
+        '-fprofile-arcs', '-ftest-coverage',
+    ],
+)
+
