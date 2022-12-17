@@ -20,7 +20,7 @@
 ## 第三方依赖：
 1. [spdlog](https://github.com/gabime/spdlog)
 2. [gtest](https://github.com/google/googletest)
-
+3. [sonic-cpp](https://github.com/bytedance/sonic-cpp)
 
 ## 参考项目：
 1. [阿里云NewSQL数据库大赛](https://tianchi.aliyun.com/competition/entrance/531980/introduction)
