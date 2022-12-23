@@ -12,6 +12,10 @@
 - [ ] 磁盘结构（SST+MANIFEST）
 - [ ] Compact
 
+## 设计
+1. 内存池设计
+
+![mem_pool](./img/mem_pool_design.png)
 ## build
 
 ```shell

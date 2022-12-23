@@ -35,8 +35,10 @@ namespace smallkv {
         auto slot_index = get_index(n);
         // 对应的内存槽上面没有空闲内存，需要先填充内存槽才可以分配
         if (memory_slot[slot_index] == nullptr) {
+            logger->debug("memory_slot[slot_index] == nullptr");
             fill_slot(slot_index); // 填充下标为slot_index的内存槽
         }
+
 
         BlockNode *ret = memory_slot[slot_index];
         memory_slot[slot_index] = ret->next;
@@ -48,8 +50,13 @@ namespace smallkv {
         int32_t block_size = (slot_index + 1) * 8; // 当前内存槽的block大小
         int32_t needed_size = FILL_BLOCK_CNT * block_size;
         if (mem_pool_size >= needed_size) {// 内存池大小完全满足需要
-            for (int i = 0; i < FILL_BLOCK_CNT; ++i) {
+            for (int i = 0; i < FILL_BLOCK_CNT - 1; ++i) {
                 auto node = reinterpret_cast<BlockNode *>(mem_pool_start + i * block_size);
+                //bugfix: 需要让当前slot的最后一个block的next指针为空，否则会导致无法调用fill_mem_pool;
+                if (i == 0) {
+                    logger->debug("2222222222222222");
+                    node->next = nullptr;
+                }
                 node->next = memory_slot[slot_index];
                 memory_slot[slot_index] = node;
             }
@@ -60,6 +67,10 @@ namespace smallkv {
             int32_t cnt = mem_pool_size / block_size;
             for (int i = 0; i < cnt; ++i) {
                 auto node = reinterpret_cast<BlockNode *>(mem_pool_start + i * block_size);
+                if (i == 0) {
+                    logger->debug("1111111111111");
+                    node->next = nullptr;
+                }
                 node->next = memory_slot[slot_index];
                 memory_slot[slot_index] = node;
             }
@@ -76,6 +87,7 @@ namespace smallkv {
             mem_pool_size = 0;
 
             // 重新申请一块内存池
+            logger->debug("func fill_mem_pool is called.");
             fill_mem_pool();
 
             // 重新执行本函数
@@ -89,6 +101,7 @@ namespace smallkv {
             logger->error("Memory allocation failed.");
             return;
         }
+        logger->debug("{}MB memory is allocated once.", CHUNK_SIZE / 1024 / 1024);
         mem_pool_size = CHUNK_SIZE;
     }
 

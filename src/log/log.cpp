@@ -14,7 +14,7 @@ namespace smallkv::log {
         std::lock_guard<std::mutex> lockGuard(_mutex);
         if (logger == nullptr) {
             logger = spdlog::stdout_color_mt("console");
-            logger->set_level(spdlog::level::trace);
+            logger->set_level(spdlog::level::debug);
         }
         return logger;
     }
