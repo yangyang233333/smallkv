@@ -21,31 +21,35 @@
 #include "log/log.h"
 #include "filter/filter_policy.h"
 #include "filter/bloom_filter.h"
-
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 using namespace std;
+
+void test_rapidjson() {
+    // 1. Parse a JSON string into DOM.
+    const char* json = R"({"project":"rapidjson","stars":10})";
+    rapidjson::Document d;
+    d.Parse(json);
+
+    // 2. 修改DOM
+    rapidjson::Value& s = d["stars"];
+    s.SetInt(s.GetInt() + 1);
+
+    // 3. 字符串化DOM
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    d.Accept(writer);
+
+    // Output {"project":"rapidjson","stars":11}
+    std::cout << buffer.GetString() << std::endl;
+}
 
 int main() {
 
     auto logger = smallkv::log::get_logger();
-//    auto h = smallkv::utils::murmur_hash2("123", 3);
-//    logger->info(h);
-//    string aaa = "123";
-//    h = smallkv::utils::murmur_hash2(aaa.c_str(), aaa.size());
-//    logger->info(h);
-    std::unique_ptr<smallkv::FilterPolicy> filterPolicy = std::make_unique<smallkv::BloomFilter>(10 * 10000, 0.01);
-    std::vector<std::string> data;
-    //插入10w
-    for (int i = 0; i < 10 * 10000; ++i) {
-        data.push_back("key_" + std::to_string(i));
-    }
-    filterPolicy->create_filter(data);
-    int cnt = 0;
-    for (int i = 0; i < 20 * 10000; ++i) {
-        if (filterPolicy->exists("key_" + std::to_string(i))) {
-            ++cnt;
-        }
-    }
-    logger->info("cnt=" + to_string(cnt));
+    logger->error("hello, {}", "wxq");
+    logger->info("hello, {}", "qianyy");
 
     return 0;
 }

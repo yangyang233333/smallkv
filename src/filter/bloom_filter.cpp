@@ -7,24 +7,11 @@
 #include <cmath>
 
 namespace smallkv {
-//    BloomFilter::BloomFilter(int bits_per_key) : bits_per_key(bits_per_key) {
-//        // 计算出最佳的哈希函数数量
-//        hash_func_num = static_cast<int32_t>(0.6931471805599453 * bits_per_key);
-//        // 保证哈希函数在[1,32]的范围内，防止过大或者过小
-//        if (hash_func_num < 1) {
-//            hash_func_num = 1;
-//        }
-//        if (hash_func_num > 32) {
-//            hash_func_num = 32;
-//        }
-//    }
 
     BloomFilter::BloomFilter(int32_t keys_num, double false_positive) {
         // 计算出最佳的位数组大小
         int32_t bits_num = -1 * static_cast<int32_t>(std::log(false_positive) * keys_num / 0.4804530139182014);
         bits_array.resize((bits_num + 7) / 8);
-//        std::cout << "bits_array.size()=" << bits_array.size() << std::endl;
-//        std::cout << "bits_num=" << bits_num << std::endl;
         bits_num = static_cast<int>(bits_array.size()) * 8; // 注意此处
         bits_per_key = bits_num / keys_num;
         // 计算最佳的哈希函数数量
@@ -46,8 +33,6 @@ namespace smallkv {
             // 模拟计算hash_func_num次哈希
             for (int j = 0; j < hash_func_num; ++j) {
                 uint32_t bit_pos = h % bits_size;
-//                std::cout << "bits_size=" << bits_size << std::endl;
-//                std::cout << "bit_pos=" << bit_pos << std::endl;
                 bits_array[bit_pos / 8] |= (1 << (bit_pos % 8));
                 // 每轮循环h都加上一个delta，就相当于每一轮都进行了一次hash
                 h += delta;
@@ -64,15 +49,11 @@ namespace smallkv {
         uint32_t delta = (h >> 17) | (h << 15);
         for (int j = 0; j < hash_func_num; ++j) {
             uint32_t bit_pos = h % bits_size;
-//            bits_array[bit_pos / 8] |= (1 << (bit_pos % 8));
             if ((bits_array[bit_pos / 8] & (1 << (bit_pos % 8))) == 0) {
                 return false;
             }
             h += delta;
         }
-//        for (unsigned char i: bits_array) {
-//            std::cout << i << std::endl;
-//        }
         return true;
     }
 
