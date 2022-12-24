@@ -10,8 +10,8 @@ namespace smallkv {
     auto logger = log::get_logger();
 
     FreeListAllocate::FreeListAllocate() {
-        // 初始化内存槽长度
-        memory_slot.resize(SLOT_NUM, nullptr);
+        // 内存槽初始化
+        memory_slot.fill(nullptr);
 
         // 初始化内存池
         mem_pool_start = (char *) malloc(CHUNK_SIZE);
@@ -35,10 +35,8 @@ namespace smallkv {
         auto slot_index = get_index(n);
         // 对应的内存槽上面没有空闲内存，需要先填充内存槽才可以分配
         if (memory_slot[slot_index] == nullptr) {
-            logger->debug("memory_slot[slot_index] == nullptr");
             fill_slot(slot_index); // 填充下标为slot_index的内存槽
         }
-
 
         BlockNode *ret = memory_slot[slot_index];
         memory_slot[slot_index] = ret->next;
@@ -50,11 +48,10 @@ namespace smallkv {
         int32_t block_size = (slot_index + 1) * 8; // 当前内存槽的block大小
         int32_t needed_size = FILL_BLOCK_CNT * block_size;
         if (mem_pool_size >= needed_size) {// 内存池大小完全满足需要
-            for (int i = 0; i < FILL_BLOCK_CNT - 1; ++i) {
+            for (int i = 0; i < FILL_BLOCK_CNT; ++i) {
                 auto node = reinterpret_cast<BlockNode *>(mem_pool_start + i * block_size);
                 //bugfix: 需要让当前slot的最后一个block的next指针为空，否则会导致无法调用fill_mem_pool;
                 if (i == 0) {
-                    logger->debug("2222222222222222");
                     node->next = nullptr;
                 }
                 node->next = memory_slot[slot_index];
@@ -68,7 +65,6 @@ namespace smallkv {
             for (int i = 0; i < cnt; ++i) {
                 auto node = reinterpret_cast<BlockNode *>(mem_pool_start + i * block_size);
                 if (i == 0) {
-                    logger->debug("1111111111111");
                     node->next = nullptr;
                 }
                 node->next = memory_slot[slot_index];
@@ -78,13 +74,18 @@ namespace smallkv {
             mem_pool_start += cnt * block_size;
             mem_pool_size -= cnt * block_size;
         } else { // 内存池大小连一个block都无法满足
+            // 内存按照8字节对其，所以内存块的大小一定是8的整数倍
+            assert(mem_pool_size % 8 == 0);
+
             // 将内存池的剩余部分挂载到slot上面，避免浪费
-            int32_t target_slot_index = get_index(mem_pool_size);
-            auto node = reinterpret_cast<BlockNode *>(mem_pool_start);
-            node->next = memory_slot[target_slot_index];
-            memory_slot[target_slot_index]->next = node;
-            mem_pool_start = nullptr;
-            mem_pool_size = 0;
+            if (mem_pool_size >= 8) {
+                int32_t target_slot_index = get_index(mem_pool_size);
+                auto node = reinterpret_cast<BlockNode *>(mem_pool_start);
+                node->next = memory_slot[target_slot_index];
+                memory_slot[target_slot_index]->next = node;
+                mem_pool_start = nullptr;
+                mem_pool_size = 0;
+            }
 
             // 重新申请一块内存池
             logger->debug("func fill_mem_pool is called.");

@@ -61,8 +61,16 @@ namespace smallkv {
         static inline int32_t get_index(int32_t n);
 
     private:
+        constexpr static int32_t SLOT_NUM = 512; // 512个内存槽
+        constexpr static int32_t ALIGN_BYTES = 8; // 按照8字节对齐
+        constexpr static int32_t MAX_OBJ_SIZE = 4 * 1024; // 设置最大的小对象为4K，超过4K就直接调用系统的malloc
+        constexpr static int32_t CHUNK_SIZE = 4 * 1024 * 1024; // 每次扩展4MB的空闲内存池
+        constexpr static int32_t FILL_BLOCK_CNT = 10; // 每次向内存槽填充的block数量，默认为10个
+
+    private:
         // 内存槽，memory_slot[0]指向空闲的8B区块链表，memory_slot[1]指向空闲的16B区块链表... ...
-        std::vector<BlockNode *> memory_slot;
+        // std::vector<BlockNode *> memory_slot;
+        std::array<BlockNode *, SLOT_NUM> memory_slot;
 
         // 空闲内存池的开始
         char *mem_pool_start = nullptr;
@@ -70,12 +78,6 @@ namespace smallkv {
         int32_t mem_pool_size = 0;
 
         std::mutex _mutex; // 待定，暂时无用
-    private:
-        constexpr static int32_t SLOT_NUM = 512; // 512个内存槽
-        constexpr static int32_t ALIGN_BYTES = 8; // 按照8字节对齐
-        constexpr static int32_t MAX_OBJ_SIZE = 4 * 1024; // 设置最大的小对象为4K，超过4K就直接调用系统的malloc
-        constexpr static int32_t CHUNK_SIZE = 4 * 1024 * 1024; // 每次扩展4MB的空闲内存池
-        constexpr static int32_t FILL_BLOCK_CNT = 10; // 每次向内存槽填充的block数量，默认为10个
     };
 }
 #endif //SMALLKV_ALLOCATE_H

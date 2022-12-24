@@ -9,7 +9,6 @@
 
 namespace smallkv {
 
-
     TEST(FreeListAllocate_Allocate, basic) {
         std::unique_ptr<FreeListAllocate> allocator = std::make_unique<FreeListAllocate>();
         auto p = (int64_t *) allocator->Allocate(8);
@@ -36,10 +35,10 @@ namespace smallkv {
         EXPECT_EQ(*p2, 10);
     }
 
-    TEST(FreeListAllocate_ALL, basic) {
+    TEST(FreeListAllocate, all_func) {
         auto logger = log::get_logger();
         std::unique_ptr<FreeListAllocate> allocator = std::make_unique<FreeListAllocate>();
-        // 测试一个链表(长度为10~1000)
+        // 测试3000个随机长度的链表的创建和释放
         struct Node {
             Node(Node *next, int32_t data) : next(next), data(data) {}
 
@@ -48,29 +47,31 @@ namespace smallkv {
         };
 
         srand(time(0));
-        for (int i = 0; i < 1000; ++i) { // 测试1000个链表
-            logger->debug("i={}", i);
+        for (int i = 0; i < 3000; ++i) { // 测试1000个链表
             Node *head = static_cast<Node *>(allocator->Allocate(sizeof(Node)));
             head->data = -1; // dummyNode
             head->next = nullptr;
 
+            // 链表初始化
             int32_t length = rand() % 1000 + 10; // 随机一个长度作为链表长度
-            auto p = head;
+            auto cur = head;
             for (int j = 0; j < length; ++j) {
-                p->next = static_cast<Node *>(allocator->Allocate(sizeof(Node)));
-                p->next->data = j;
-                p->next->next = nullptr;
-                p = p->next;
+                cur->next = static_cast<Node *>(allocator->Allocate(sizeof(Node)));
+                cur = cur->next;
+                cur->data = j;
+                cur->next = nullptr;
             }
-            p = head;
-//            auto prev = p;
-//            for (int j = 0; j < length; ++j) {
-//                p = p->next;
-//                EXPECT_EQ(p->data, j);
-//                allocator->Deallocate(prev, sizeof(Node));
-//                prev = prev->next;
-//            }
-        }
 
+            cur = head->next;
+            auto prev = head;
+            // 检查链表值然后释放链表内存
+            for (int j = 0; j < length; ++j) {
+                EXPECT_EQ(cur->data, j);
+                allocator->Deallocate(prev, sizeof(Node));
+                prev = cur;
+                cur = cur->next;
+            }
+            allocator->Deallocate(prev, sizeof(Node));
+        }
     }
 }
