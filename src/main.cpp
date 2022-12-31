@@ -28,12 +28,10 @@ using namespace std;
 
 
 int main() {
-
     auto logger = smallkv::log::get_logger();
     logger->error("hello, {}", "wxq");
     logger->info("hello, {}", "qianyy");
 
-    test_json();
     return 0;
 }
 
