@@ -21,29 +21,11 @@
 #include "log/log.h"
 #include "filter/filter_policy.h"
 #include "filter/bloom_filter.h"
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
+
 using namespace std;
 
-void test_rapidjson() {
-    // 1. Parse a JSON string into DOM.
-    const char* json = R"({"project":"rapidjson","stars":10})";
-    rapidjson::Document d;
-    d.Parse(json);
-
-    // 2. 修改DOM
-    rapidjson::Value& s = d["stars"];
-    s.SetInt(s.GetInt() + 1);
-
-    // 3. 字符串化DOM
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-    d.Accept(writer);
-
-    // Output {"project":"rapidjson","stars":11}
-    std::cout << buffer.GetString() << std::endl;
-}
 
 int main() {
 
@@ -51,6 +33,7 @@ int main() {
     logger->error("hello, {}", "wxq");
     logger->info("hello, {}", "qianyy");
 
+    test_json();
     return 0;
 }
 

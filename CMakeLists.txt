@@ -18,14 +18,14 @@ include_directories(${GTest_INCLUDE_DIRS})
 find_package(spdlog REQUIRED)
 include_directories(${spdlog_INCLUDE_DIRS})
 
-# RapidJSON
-find_package(RapidJSON REQUIRED)
-include_directories(${RapidJSON_INCLUDE_DIRS})
+# nlohmann_json
+find_package(nlohmann_json 3.2.0 REQUIRED)
 
 include_directories(src)
 
 file(GLOB_RECURSE SRC src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC})
+target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json)
 
 if (SMALLKV-UNITTEST)
     enable_testing()
@@ -39,5 +39,5 @@ if (SMALLKV-UNITTEST)
     file(GLOB_RECURSE SRC_TEST tests/*.cpp)
     add_executable(smallkv-unitest ${SRC_WITHOUT_MAIN} ${SRC_TEST})
     # 需要链接一下
-    target_link_libraries(smallkv-unitest gtest pthread)
+    target_link_libraries(smallkv-unitest PRIVATE gtest pthread nlohmann_json::nlohmann_json)
 endif (SMALLKV-UNITTEST)

@@ -20,14 +20,14 @@
 
 ```shell
 ./build.sh
-./run_main.sh
+./main_run.sh
 ```
 
 ## 第三方依赖：
 
 1. [spdlog](https://github.com/gabime/spdlog)
 2. [gtest](https://github.com/google/googletest)
-3. [rapidjson](https://github.com/Tencent/rapidjson)
+3. [nlohmann/json](https://github.com/nlohmann/json)
 
 ## 参考项目：
 
