@@ -26,11 +26,32 @@
 
 using namespace std;
 
+mutex m;
+
+void fn(bool need_lock) {
+    // 如何消除if分支？
+    if (need_lock) {
+        lock_guard<mutex> lockGuard(m);
+        // xxx
+    } else {
+        //xxx
+    }
+}
+
+template<typename LockType>
+void fn_enhanced() {
+    LockType lockType;
+    lock_guard<LockType> lockGuard(lockType);
+//    xxx
+}
+
+
 
 int main() {
     auto logger = smallkv::log::get_logger();
     logger->error("hello, {}", "wxq");
     logger->info("hello, {}", "qianyy");
+
 
     return 0;
 }

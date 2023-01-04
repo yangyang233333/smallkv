@@ -24,7 +24,7 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 include_directories(src)
 
 file(GLOB_RECURSE SRC src/*.cpp)
-add_executable(${PROJECT_NAME} ${SRC})
+add_executable(${PROJECT_NAME} ${SRC} src/cache/lru.h)
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json)
 
 if (SMALLKV-UNITTEST)
