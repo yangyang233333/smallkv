@@ -2,7 +2,7 @@
 // Created by qianyy on 2023/1/4.
 //
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <memory>
 

@@ -1,7 +1,7 @@
 //
 // Created by qianyy on 2023/1/4.
 //
-#include "stdint.h"
+#include <cstdint>
 
 #ifndef SMALLKV_NODE_H
 #define SMALLKV_NODE_H

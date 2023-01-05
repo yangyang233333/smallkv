@@ -23,7 +23,15 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 
 include_directories(src)
 
-file(GLOB_RECURSE SRC src/*.cpp)
+file(GLOB_RECURSE SRC
+        src/cache/*.cpp
+        src/config/*.cpp
+        src/filter/*.cpp
+        src/log/*.cpp
+        src/memory/*.cpp
+        src/utils/*.cpp
+        src/main.cpp
+        src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC} src/cache/lru.h)
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json)
 
