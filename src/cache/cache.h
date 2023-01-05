@@ -23,7 +23,7 @@ namespace smallkv {
 
         static constexpr std::hash<K> hash_fn{};
     public:
-        Cache(uint32_t cap) {
+        explicit Cache(uint32_t cap) {
             caches.resize(SHARDING_NUM);
             for (int i = 0; i < SHARDING_NUM; ++i) {
                 caches[i] = std::make_shared<LRU<K, V, MutexLock>>(cap);

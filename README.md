@@ -16,6 +16,11 @@
 1. 内存池设计
 
 ![mem_pool](./img/mem_pool_design.png)
+
+2. 缓存设计
+![cache](./img/cache_design.png)
+Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。
+
 ## build
 
 ```shell
