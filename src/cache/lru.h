@@ -25,7 +25,6 @@ namespace smallkv {
     class LRU final : public CachePolicy<K, V> {
     private:
         const uint32_t cap = 0; // 最大容量
-        uint32_t size = 0;      // 当前容量
 
         // 存放所有node的指针
         std::list<Node<K, V> *> nodes;
@@ -60,10 +59,10 @@ namespace smallkv {
          * 等待其引用计数降为0，才可以删除。
          * */
         void phantom_erase_node(Node<K, V> *node) {
-            if (node && index.count(node->key) == 1) {
+            if (node) {
                 node->in_cache = false;
+                nodes.erase(index[node->key]);
                 index.erase(node->key);
-                nodes.pop_back();
                 garbage_station[node->key] = node; // 移动到待删除队列
                 unref(node);
             }
@@ -106,7 +105,7 @@ namespace smallkv {
         void insert(const K &key, V *val) override {
             ScopedLock<LockType> lock_guard(locker);
 //            log::get_logger()->info("nodes_size={}", nodes.size());
-            //log::get_logger()->info("[insert] was called, arg: key={}, *val={}", key, *val);
+//            log::get_logger()->info("[insert] was called, arg: key={}, *val={}", key, *val);
 
             // node init
             auto new_node = new Node<K, V>();
@@ -121,12 +120,7 @@ namespace smallkv {
             if (f == index.end()) { // 当前节点是一个新的节点
                 nodes.push_front(new_node);
                 index[new_node->key] = nodes.begin();
-                log::get_logger()->info("++++++++++++++++++++++++++++++++++");
-                log::get_logger()->info("nodes.size()=", nodes.size());
-                log::get_logger()->info("++++++++++++++++++++++++++++++++++");
                 if (nodes.size() > cap) { // 满了就淘汰最后的节点
-                    log::get_logger()->info("----------------key={}", key);
-                    exit(1);
                     auto old_node = nodes.back();
                     // 删除节点(实际上并不是真的删除，只是从LRU中移出到待删除队列中，直到ref_cnt为0才会真正时删除)
                     phantom_erase_node(old_node);
@@ -141,7 +135,7 @@ namespace smallkv {
         // 删
         void erase(const K &key) override {
             ScopedLock<LockType> lock_guard(locker);
-            //log::get_logger()->info("[erase] was called, arg: key={}", key);
+//            log::get_logger()->info("[erase] was called, arg: key={}", key);
             auto iter = index.find(key);
             if (iter != index.end()) {
                 phantom_erase_node(*(iter->second));// 从LRU的缓存中删除，然后放到回收站
@@ -157,6 +151,7 @@ namespace smallkv {
                 return nullptr;
             }
             nodes.splice(nodes.begin(), nodes, iter->second); // 移动到头部
+            index[key] = nodes.begin();
             ref(*(iter->second));
             return *(iter->second);
         }
