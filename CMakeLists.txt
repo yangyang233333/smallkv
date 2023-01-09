@@ -21,6 +21,10 @@ include_directories(${spdlog_INCLUDE_DIRS})
 # nlohmann_json
 find_package(nlohmann_json 3.2.0 REQUIRED)
 
+# yaml-cpp
+find_package(yaml-cpp REQUIRED)
+include_directories(${yaml-cpp_INCLUDE_DIRS})
+
 include_directories(src)
 
 file(GLOB_RECURSE SRC
@@ -33,7 +37,7 @@ file(GLOB_RECURSE SRC
         src/main.cpp
         src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC} src/cache/lru.h)
-target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json yaml-cpp)
 
 if (SMALLKV-UNITTEST)
     enable_testing()
@@ -47,5 +51,5 @@ if (SMALLKV-UNITTEST)
     file(GLOB_RECURSE SRC_TEST tests/*.cpp)
     add_executable(smallkv-unitest ${SRC_WITHOUT_MAIN} ${SRC_TEST})
     # 需要链接一下
-    target_link_libraries(smallkv-unitest PRIVATE gtest pthread nlohmann_json::nlohmann_json)
+    target_link_libraries(smallkv-unitest PRIVATE gtest pthread nlohmann_json::nlohmann_json yaml-cpp)
 endif (SMALLKV-UNITTEST)
