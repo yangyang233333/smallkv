@@ -22,8 +22,8 @@ namespace smallkv {
         ~Status() = delete;
 
         static constexpr DBStatus Success = {1, "Success."};
-//        static constexpr DBStatus
-
+        static constexpr DBStatus InvalidArgs = {2, "Invalid args."};
+        static constexpr DBStatus ExecFailed = {3, "Exec failed."};
     };
 }
 
