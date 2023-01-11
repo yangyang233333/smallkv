@@ -29,6 +29,7 @@ include_directories(src)
 
 file(GLOB_RECURSE SRC
         src/cache/*.cpp
+        src/file/*.cpp
         src/config/*.cpp
         src/filter/*.cpp
         src/log/*.cpp
@@ -43,6 +44,7 @@ if (SMALLKV-UNITTEST)
     enable_testing()
     file(GLOB_RECURSE SRC_WITHOUT_MAIN
             src/cache/*.cpp
+            src/file/*.cpp
             src/config/*.cpp
             src/filter/*.cpp
             src/log/*.cpp

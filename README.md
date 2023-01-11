@@ -2,6 +2,7 @@
 
 这个项目主要源于一次阿里云的newsql数据库大赛参赛经历，
 由于比赛中写的架构较为简略，所以在这里重构一下这个kv引擎。
+smallkv 是一个列存的、基于LSM架构的存储引擎。
 
 ## 进度
 
@@ -35,8 +36,9 @@ Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分�
 2. [gtest](https://github.com/google/googletest)
 3. [nlohmann/json](https://github.com/nlohmann/json)
 
-## 参考项目：
+## 参考：
 
 1. [阿里云NewSQL数据库大赛](https://tianchi.aliyun.com/competition/entrance/531980/introduction)
 2. [corekv](https://github.com/hardcore-os/coreKV-CPP)
 3. [leveldb](https://github.com/google/leveldb)
+4. [LSM树原理](https://zhuanlan.zhihu.com/p/181498475)
