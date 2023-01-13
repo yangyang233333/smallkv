@@ -1,5 +1,6 @@
 # cmake
 cmake-build-debug
+cmake-build-debug-event-trace
 ./smallkv/cmake-build-debug
 ./test/cmake-build-debug
 test/CMakeCache.txt

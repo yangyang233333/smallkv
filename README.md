@@ -6,12 +6,14 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 
 ## 进度
 
-- [ ] 跳表
+- [ ] memtable: 跳表
 - [x] 布隆过滤器
 - [x] 内存池
-- [x] 缓存
-- [ ] 磁盘结构（SST+MANIFEST）
-- [ ] Compact
+- [x] 缓存模块
+- [x] FileWriter/FileReader(todo: 支持mmap)
+- [ ] 磁盘模块（SST+MANIFEST）
+- [ ] WAL模块
+- [ ] Compaction模块
 
 ## 设计
 1. 内存池设计
@@ -42,3 +44,4 @@ Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分�
 2. [corekv](https://github.com/hardcore-os/coreKV-CPP)
 3. [leveldb](https://github.com/google/leveldb)
 4. [LSM树原理](https://zhuanlan.zhihu.com/p/181498475)
+5. [LSM Tree是什么?](https://www.zhihu.com/question/446544471/answer/2348883977)
