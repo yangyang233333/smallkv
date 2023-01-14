@@ -45,3 +45,7 @@ Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分�
 3. [leveldb](https://github.com/google/leveldb)
 4. [LSM树原理](https://zhuanlan.zhihu.com/p/181498475)
 5. [LSM Tree是什么?](https://www.zhihu.com/question/446544471/answer/2348883977)
+
+---
+
+Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
