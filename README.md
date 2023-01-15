@@ -26,8 +26,25 @@ Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分�
 
 ## build
 
+必须使用g++编译器
+### build from source code:
 ```shell
-./build.sh
+# 安装依赖
+apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
+    && git clone https://github.com/gabime/spdlog.git && cd spdlog && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
+    && git clone https://github.com/google/googletest && cd googletest && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
+    && git clone https://github.com/nlohmann/json && cd json && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
+    && rm -rf spdlog googletest json
+./build.sh         ##  编译
+./main_run.sh      ## 主程序
+./unittest_run.sh  ## 单元测试
+```
+### build from docker (Highly recommended)
+```shell
+cd docker
+docker build -t smallkv-testenv . # 需要几分钟
+docker run -it -v /{smallkv代码所在的目录}:/test smallkv-testenv /bin/bash
+./build.sh         ##  编译
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
 ```
@@ -48,4 +65,5 @@ Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分�
 
 ---
 
+感谢 [JetBrains](https://jb.gg/OpenSourceSupport) 捐献的免费许可证帮助我们开发smallkv。  
 Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
