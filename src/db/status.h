@@ -17,7 +17,7 @@ namespace smallkv {
     bool operator!=(const DBStatus &a, const DBStatus &b);
 
     struct Status {
-        Status() = delete;
+        Status() = delete;  // 禁止创建对象
 
         ~Status() = delete;
 
