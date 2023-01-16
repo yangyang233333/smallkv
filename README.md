@@ -1,4 +1,8 @@
 # smallkv
+![](https://github.com/yangyang233333/smallkv/actions/workflows/cmake-unittest.yml/badge.svg)
+![GitHub top language](https://img.shields.io/github/languages/top/yangyang233333/smallkv)
+[![GitHub stars](https://img.shields.io/github/stars/yangyang233333/smallkv)](https://github.com/yangyang233333/smallkv)
+[![LICENSE](https://img.shields.io/github/license/yangyang233333/smallkv.svg?style=flat-square)](https://github.com/yangyang233333/smallkv/blob/master/LICENSE)
 
 这个项目主要源于一次阿里云的newsql数据库大赛参赛经历，
 由于比赛中写的架构较为简略，所以在这里重构一下这个kv引擎。
