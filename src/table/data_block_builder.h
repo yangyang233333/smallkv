@@ -76,7 +76,7 @@ namespace smallkv {
         // 当Block中的所有Record的大小超过阈值时，停止写入，并且生成重启点等信息
         DBStatus add_restart_points();
 
-        const char *data() { return _data.c_str(); }
+        std::string_view data() { return _data; }
 
         // 清空DataBlock中的所有数据
         void reset();
