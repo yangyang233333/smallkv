@@ -1,4 +1,6 @@
-# smallkv
+![SmallKV Logo](./img/logo.png)
+
+--------------------------------------------------------------------------------
 ![](https://github.com/yangyang233333/smallkv/actions/workflows/cmake-unittest.yml/badge.svg)
 ![GitHub top language](https://img.shields.io/github/languages/top/yangyang233333/smallkv)
 [![GitHub stars](https://img.shields.io/github/stars/yangyang233333/smallkv)](https://github.com/yangyang233333/smallkv)
@@ -8,6 +10,7 @@
 由于比赛中写的架构较为简略，所以在这里重构一下这个kv引擎。
 smallkv 是一个列存的、基于LSM架构的存储引擎。
 
+项目正在疯狂迭代中！！
 ## 进度
 
 - [ ] memtable: 跳表
@@ -15,18 +18,13 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [x] 内存池
 - [x] 缓存模块
 - [x] FileWriter/FileReader(todo: 支持mmap)
-- [ ] 磁盘模块（SST+MANIFEST）
+- [x] SSTable
+- [ ] SST文件的MANIFEST
 - [ ] WAL模块
+- [ ] 读流程
+- [ ] 写流程
 - [ ] Compaction模块
 
-## 设计
-1. 内存池设计
-
-![mem_pool](./img/mem_pool_design.png)
-
-2. 缓存设计
-![cache](./img/cache_design.png)
-Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。
 
 ## build
 
@@ -52,6 +50,15 @@ docker run -it -v /{smallkv代码所在的目录}:/test smallkv-testenv /bin/bas
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
 ```
+
+## 设计
+1. 内存池设计
+
+![mem_pool](./img/mem_pool_design.png)
+
+2. 缓存设计
+![cache](./img/cache_design.png)
+Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。
 
 ## 第三方依赖：
 

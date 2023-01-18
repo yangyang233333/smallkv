@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <string_view>
 
 #ifndef SMALLKV_FILTER_POLICY_H
 #define SMALLKV_FILTER_POLICY_H
@@ -13,8 +14,16 @@ namespace smallkv {
     public:
         FilterPolicy() = default;
 
+        virtual ~FilterPolicy() = default;
+
+        // 返回数据，用于持久化
+        virtual std::string &data() = 0;
+
         //过滤器的名字
         virtual std::string policy_name() = 0;
+
+        // 返回hash函数的数量
+        virtual int32_t get_hash_num() = 0;
 
         virtual void create_filter(const std::vector<std::string> &keys) = 0;
 
@@ -22,8 +31,6 @@ namespace smallkv {
         virtual bool exists(const std::string_view &key) = 0;
 
         virtual uint64_t size() = 0;
-
-        virtual ~FilterPolicy() = default;
     };
 }
 

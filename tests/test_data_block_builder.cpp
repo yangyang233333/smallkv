@@ -49,7 +49,7 @@ namespace smallkv {
          *
          * */
         // 添加重启点
-        builder->add_restart_points();
+        builder->finish_data_block();
         EXPECT_EQ(builder->data().size(), 74); // 加上重启点和Restart Point Num后，全体size应该为58+12+4=74B
         EXPECT_EQ(utils::DecodeFixed32(builder->data().substr(58, 4).data()), 3); // record_num == 3
         OffsetInfo offsetInfo = *reinterpret_cast<const OffsetInfo *>(

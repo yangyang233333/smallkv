@@ -24,8 +24,15 @@ namespace smallkv {
         // 输出过滤器的名字，当前是布隆过滤器
         std::string policy_name() override;
 
+        // 返回bit数组，用于持久化
+        std::string &data() override;
 
         uint64_t size() override;
+
+        // 返回hash函数的数量
+        inline int32_t get_hash_num() override {
+            return hash_func_num;
+        }
 
         // 创建过滤器
         // 误差为1/10000时，存一千万条数据，布隆过滤器大小约为23MB
@@ -44,7 +51,8 @@ namespace smallkv {
         // 每个key所占据的位数
         int32_t bits_per_key = 0;
         // bit数组
-        std::vector<uint8_t> bits_array;
+        //std::vector<uint8_t> bits_array;
+        std::string bits_array;
     };
 }
 

@@ -3,7 +3,9 @@
 //
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
+#include <memory>
 #include <string_view>
 #include "../db/status.h"
 #include "../db/offset_info.h"
@@ -11,6 +13,8 @@
 #ifndef SMALLKV_DATA_BLOCK_Builder_H
 #define SMALLKV_DATA_BLOCK_Builder_H
 namespace smallkv {
+    class FileWriter;
+
     /*
      * DataBlock包含三个部分，分别是Records、Restart Points、Restart Point Count
      * 数据排布如下:
@@ -71,15 +75,21 @@ namespace smallkv {
         ~DataBlockBuilder() = default;
 
         // 添加一个Key-Value对
-        DBStatus add(const std::string_view &key, const std::string_view &value);
+        DBStatus add(const std::string &key, const std::string &value);
 
         // 当Block中的所有Record的大小超过阈值时，停止写入，并且生成重启点等信息
-        DBStatus add_restart_points();
+        // 当此函数被调用完成的时候，表明当前DataBlock已经完全写完，所有必备数据
+        // 都写到了_data中此时持久化只需要持久化_data即可
+        DBStatus finish_data_block();
 
         std::string_view data() { return _data; }
 
         // 清空DataBlock中的所有数据
-        void reset();
+        void clear();
+
+        size_type size() {
+            return _data.size();
+        }
 
     private:
         // 获得本DataBlock中已写入的所有Record的size

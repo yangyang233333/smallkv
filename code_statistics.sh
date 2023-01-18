@@ -1,0 +1,1 @@
+cloc src/ docker/ tests/ CMakeLists.txt *sh *md
