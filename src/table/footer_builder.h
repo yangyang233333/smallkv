@@ -25,6 +25,10 @@ namespace smallkv {
         std::string _data;
 
     public:
+        FooterBuilder() = default;
+
+        ~FooterBuilder() = default;
+
         DBStatus add(const OffsetInfo &meta_block_offset_info,
                      const OffsetInfo &index_block_offset_info);
 
