@@ -16,5 +16,5 @@ RUN apt update \
     && git clone https://github.com/gabime/spdlog.git && cd spdlog && mkdir build && cd build && cmake .. && make -j && make install && cd ~ \
     && git clone https://github.com/google/googletest && cd googletest && mkdir build && cd build && cmake .. && make -j && make install && cd ~ \
     && git clone https://github.com/nlohmann/json && cd json && mkdir build && cd build && cmake .. && make -j && make install && cd ~ \
-    && rm -rf spdlog googletest json \
+    && rm -rf spdlog googletest json
 

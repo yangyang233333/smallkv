@@ -28,12 +28,12 @@ file(GLOB_RECURSE SRC
         src/cache/*.h
         src/compress/*.cpp
         src/compress/*.h
+        src/config/*.cpp
+        src/config/*.h
         src/db/*.cpp
         src/db/*.h
         src/file/*.cpp
         src/file/*.h
-        src/config/*.cpp
-        src/config/*.h
         src/filter/*.cpp
         src/filter/*.h
         src/log/*.cpp
@@ -59,12 +59,12 @@ if (SMALLKV-UNITTEST)
             src/cache/*.h
             src/compress/*.cpp
             src/compress/*.h
+            src/config/*.cpp
+            src/config/*.h
             src/db/*.cpp
             src/db/*.h
             src/file/*.cpp
             src/file/*.h
-            src/config/*.cpp
-            src/config/*.h
             src/filter/*.cpp
             src/filter/*.h
             src/log/*.cpp

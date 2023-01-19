@@ -9,8 +9,9 @@
 #include "../log/log.h"
 
 namespace smallkv {
+
     // todo: 热点函数，后续需要更多优化
-    DBStatus DataBlockBuilder::add(const std::string_view &key, const std::string_view &value) {
+    DBStatus DataBlockBuilder::add(const std::string &key, const std::string &value) {
         if (key.empty()) {
             return Status::Success;
         }
@@ -22,14 +23,14 @@ namespace smallkv {
         ++record_num; // DataBlock中的Record的数量加一
 
         if (need_fullkey) {
-            // 是Record Group的第一条数据，不需要压缩
+            // 是Record Group的第一条数据，不需要差值压缩
             utils::PutFixed32(_data, 0);                                  // shared_key_len
             utils::PutFixed32(_data, static_cast<int32_t>(key.size()));   // unshared_key_len
             utils::PutFixed32(_data, static_cast<int32_t>(value.size())); // value_len
             _data.append(key);                                               // unshared_key_content
             _data.append(value);                                             // value_content
         } else {
-            // 非第一条数据，压缩
+            // 非第一条数据，进行差值压缩
             // 计算当前key和前一个key的公共部分
             auto min_len = std::min(key.size(), pre_key.size());
             int shared_key_len = 0;
@@ -54,10 +55,9 @@ namespace smallkv {
         return Status::Success;
     }
 
-    DBStatus DataBlockBuilder::add_restart_points() {
+    DBStatus DataBlockBuilder::finish_data_block() {
         int restart_point_num = static_cast<int>((record_num - 0.5) / 16) + 1;
         int last_offset = static_cast<int>(_data.size()); // 记录_data的最后一个字节的位置
-        log::get_logger()->info("record_group_offset.size={}", record_group_offset.size());
         for (int i = 0; i < record_group_offset.size(); ++i) {
             //
             //     Restart_Point的schema如下：
@@ -81,10 +81,10 @@ namespace smallkv {
         return Status::Success;
     }
 
-    void DataBlockBuilder::reset() {
+    void DataBlockBuilder::clear() {
         record_group_offset.clear();
-        pre_key = "";
-        _data = "";
+        pre_key.clear();
+        _data.clear();
         record_num = 0;
     }
 }

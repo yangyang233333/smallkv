@@ -17,6 +17,11 @@ namespace smallkv {
         int32_t get_offset_info_size() {
             return sizeof(size) + sizeof(offset);
         }
+
+        void clear() {
+            size = 0;
+            offset = 0;
+        }
     };
 }
 #endif //SMALLKV_OFFSET_INFO_H

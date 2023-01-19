@@ -64,4 +64,8 @@ namespace smallkv {
     std::string BloomFilter::policy_name() {
         return "BloomFilter";
     }
+
+    std::string &BloomFilter::data() {
+        return bits_array;
+    }
 };
