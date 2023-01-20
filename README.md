@@ -79,7 +79,7 @@ IndexBlock存储对应的DataBlock中的最大key信息（注意：实际存储�
 - #### Footer  
 ![footer_schema](./img/footer_schema.png)
 MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo记录了IndexBlock的offset（第一个IndexBlock的offset）和size（所有IndexBlock的总大小）。
-
+ 
 ---
 ## 第三方依赖：
 
