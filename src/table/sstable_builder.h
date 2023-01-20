@@ -4,8 +4,9 @@
 #include <memory>
 #include <string>
 #include <string_view>
-#include "../db/status.h"
-#include "../db/offset_info.h"
+#include "log/log.h"
+#include "db/status.h"
+#include "db/offset_info.h"
 
 #ifndef SMALLKV_SSTABLE_BUILDER_H
 #define SMALLKV_SSTABLE_BUILDER_H
@@ -55,6 +56,8 @@ namespace smallkv {
         std::shared_ptr<FilterBlockBuilder> filterBlockBuilder = nullptr;// 操作Filter
         std::shared_ptr<FileWriter> fileWriter = nullptr;                // 操作SST的落盘
         std::shared_ptr<FooterBuilder> footerBuilder = nullptr;          // 操作Footer
+
+        std::shared_ptr<spdlog::logger> logger; // logger
 
         // 分别保存FilterBlock、IndexBlock的offset信息，然后保存在Footer中
         OffsetInfo FilterBlock_offset{0, 0};

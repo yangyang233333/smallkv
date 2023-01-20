@@ -14,7 +14,8 @@ namespace smallkv {
         ~FileReader();
 
         // 类似unistd中的pread
-        DBStatus read(void *buf, int32_t count, int32_t offset) const;
+        // 从offset处开始，读取count长度的内容到buf中
+        DBStatus read(void *buf, int32_t count, int32_t offset = 0) const;
 
     private:
         int fd{0};

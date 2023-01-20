@@ -21,6 +21,8 @@ namespace smallkv {
         dataBlockBuilder = std::make_shared<DataBlockBuilder>();
         indexBlockBuilder = std::make_shared<IndexBlockBuilder>();
         filterBlockBuilder = std::make_shared<FilterBlockBuilder>(keys_num, false_positive);
+        footerBuilder = std::make_shared<FooterBuilder>();
+        logger = log::get_logger();
     }
 
     DBStatus SSTableBuilder::add(const std::string &key, const std::string &val) {
@@ -105,6 +107,7 @@ namespace smallkv {
 
             dataBlockBuilder->clear(); // 持久化完成后，清空当前dataBlockBuilder
         }
+        filterBlockBuilder->finish_filter_block();
 
         // 保存FilterBlock的size
         FilterBlock_offset.size = static_cast<int32_t>(filterBlockBuilder->data().size());
@@ -127,13 +130,16 @@ namespace smallkv {
 
         // 持久化
         fileWriter->flush();
+        fileWriter->close();
 
         // 清空字段
         dataBlockBuilder->clear();
         indexBlockBuilder->clear();
         filterBlockBuilder = std::make_shared<FilterBlockBuilder>(
                 _keys_num, _false_positive);
-        //todo : fileWriter字段如何清空？？这里存在设计缺陷！！
+        // todo : fileWriter字段如何清空？？这里存在设计缺陷！！
+        // 关于上面todo的解释：每个.sst文件只会放一个SSTable，所以在SSTableBuilder外部建一个FileWriter指针，
+        // 然后传给SSTableBuilder来创建这个文件，创建完成后，这个FileWriter指针应该会自动销毁
         footerBuilder->clear();
 
         FilterBlock_offset.clear();

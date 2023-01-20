@@ -10,7 +10,9 @@
 由于比赛中写的架构较为简略，所以在这里重构一下这个kv引擎。
 smallkv 是一个列存的、基于LSM架构的存储引擎。
 
-项目正在疯狂迭代中！！
+**项目正在疯狂迭代中！！**
+
+---
 ## 进度
 
 - [ ] memtable: 跳表
@@ -25,10 +27,10 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [ ] 写流程
 - [ ] Compaction模块
 
-
+---
 ## build
 
-必须使用g++编译器
+You must use the g++ compiler and Ubuntu 22.04 system.
 ### build from source code:
 ```shell
 # 安装依赖
@@ -37,7 +39,7 @@ apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
     && git clone https://github.com/google/googletest && cd googletest && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
     && git clone https://github.com/nlohmann/json && cd json && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
     && rm -rf spdlog googletest json
-./build.sh         ##  编译
+./build.sh         ## 编译
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
 ```
@@ -46,26 +48,30 @@ apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
 cd docker
 docker build -t smallkv-testenv . # 需要几分钟
 docker run -it -v /{smallkv代码所在的目录}:/test smallkv-testenv /bin/bash
-./build.sh         ##  编译
+./build.sh         ## 编译
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
 ```
-
+---
 ## 设计
-1. 内存池设计
-
+1. **内存池设计**
 ![mem_pool](./img/mem_pool_design.png)
 
-2. 缓存设计
+2. **缓存设计**
 ![cache](./img/cache_design.png)
-Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。
+Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。  
 
+3. **SStable设计**  
+todo
+
+---
 ## 第三方依赖：
 
 1. [spdlog](https://github.com/gabime/spdlog)
 2. [gtest](https://github.com/google/googletest)
 3. [nlohmann/json](https://github.com/nlohmann/json)
 
+---
 ## 参考：
 
 1. [阿里云NewSQL数据库大赛](https://tianchi.aliyun.com/competition/entrance/531980/introduction)
