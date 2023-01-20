@@ -77,6 +77,7 @@ namespace smallkv {
             utils::PutFixed32(_data, _record_num);
             utils::PutFixed64(_data, *reinterpret_cast<int64_t *>(&_offsetInfo));
         }
+        // 重启点数量
         utils::PutFixed32(_data, restart_point_num);
         return Status::Success;
     }

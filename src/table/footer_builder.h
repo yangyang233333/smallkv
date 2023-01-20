@@ -2,6 +2,7 @@
 // Created by qianyy on 2023/1/19.
 //
 #include <string>
+#include "log/log.h"
 #include "db/offset_info.h"
 #include "db/status.h"
 
@@ -24,7 +25,13 @@ namespace smallkv {
 //        OffsetInfo index_block_offset_info;
         std::string _data;
 
+        std::shared_ptr<spdlog::logger> logger = log::get_logger(); // logger
+
     public:
+        FooterBuilder() = default;
+
+        ~FooterBuilder() = default;
+
         DBStatus add(const OffsetInfo &meta_block_offset_info,
                      const OffsetInfo &index_block_offset_info);
 
