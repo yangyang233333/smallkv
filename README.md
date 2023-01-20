@@ -54,15 +54,31 @@ docker run -it -v /{smallkv代码所在的目录}:/test smallkv-testenv /bin/bas
 ```
 ---
 ## 设计
-1. **内存池设计**
+### 1. **内存池设计**
 ![mem_pool](./img/mem_pool_design.png)
 
-2. **缓存设计**
+### 2. **缓存设计**
 ![cache](./img/cache_design.png)
 Cache中持有N（默认为5）个指向CachePolicy的指针，相当于5个分片，可以减少哈希冲突以及减少锁的范围；LRUCache和LFUCache都是CachePolicy的子类。  
 
-3. **SStable设计**  
-todo
+### 3. **SStable设计**  
+每个.sst文件存储一个SSTable结构，SSTable结构如下所示：    
+![sstable_schema](./img/sstable.png)
+下面细说每个模块的内容：  
+- #### DataBlock  
+![data_block_schema](./img/data_block_schema.png)
+  1）上图中，每个Record存储了具体的KV数据，并且记录了连续的Key的共享长度（为了差值压缩）；  
+  2）Restart主要用来进行二分查找，根据Restart中记录的offset信息可以解析出对应的Record Group中最小的Key，通过比对连续的Restart中的Key可以快速定位K-V pair，每个Restart记录了一个Record Group中的Record数量，以及对应的size和offset，每个Restart长度为12字节；  
+  3）Restart_NUM记录了Restart的数量；  
+  4）Restart_Offset记录了Restart的size和offset信息；  
+- #### MetaBlock  
+MetaBlock中存储了Filter信息（位数组和哈希函数个数），也就是布隆过滤器的数据。为什么需要这个数据？因为sst是顺序append结构，所以写入很快（O(1)），但是查找非常慢（O(N)），于是需要一个布隆过滤器来对请求进行初步的过滤（可以过滤掉一定不存在的KV pair）。
+- #### IndexBlock  
+![index_block_schema](./img/index_block_schema.png)
+IndexBlock存储对应的DataBlock中的最大key信息（注意：实际存储的是shortest_key，并且shortest_key = min{shortest_key > 对应的DataBlock的最大key}，这样可以减小比较次数，缓解高并发下的压力）；Offset_Info存储了对应DataBlock的size和offset。
+- #### Footer  
+![footer_schema](./img/footer_schema.png)
+MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo记录了IndexBlock的offset（第一个IndexBlock的offset）和size（所有IndexBlock的总大小）。
 
 ---
 ## 第三方依赖：
