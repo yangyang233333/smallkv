@@ -23,35 +23,15 @@
 #include "filter/bloom_filter.h"
 #include <nlohmann/json.hpp>
 #include <fstream>
+#include <absl/crc/crc32c.h>
 
 using namespace std;
 
-mutex m;
-
-void fn(bool need_lock) {
-    // 如何消除if分支？
-    if (need_lock) {
-        lock_guard<mutex> lockGuard(m);
-        // xxx
-    } else {
-        //xxx
-    }
-}
-
-template<typename LockType>
-void fn_enhanced() {
-    LockType lockType;
-    lock_guard<LockType> lockGuard(lockType);
-//    xxx
-}
-
-
-
 int main() {
     auto logger = smallkv::log::get_logger();
-    logger->error("hello, {}", "wxq");
-    logger->info("hello, {}", "qianyy");
-
+    string buf = "56fdg4g6f5d4";
+    auto crc_val = absl::ComputeCrc32c(buf);
+    cout << crc_val << endl;
 
     return 0;
 }

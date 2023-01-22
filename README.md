@@ -38,6 +38,7 @@ apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
     && git clone https://github.com/gabime/spdlog.git && cd spdlog && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
     && git clone https://github.com/google/googletest && cd googletest && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
     && git clone https://github.com/nlohmann/json && cd json && mkdir build && cd build && cmake .. && make -j && sudo make install && cd ~ \
+    && git clone https://github.com/abseil/abseil-cpp.git && cd abseil-cpp && mkdir build && cd build && cmake .. && make -j && make install && cd ~ \
     && rm -rf spdlog googletest json
 ./build.sh         ## 编译
 ./main_run.sh      ## 主程序
@@ -45,9 +46,8 @@ apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
 ```
 ### build from docker (Highly recommended)
 ```shell
-cd docker
-docker build -t smallkv-testenv . # 需要几分钟
-docker run -it -v /{smallkv代码所在的目录}:/test smallkv-testenv /bin/bash
+docker pull qianyy2333/smallkv-test
+docker run -it -v /{smallkv代码所在的目录}:/test qianyy2333/smallkv-test /bin/bash
 ./build.sh         ## 编译
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
@@ -86,6 +86,7 @@ MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo�
 1. [spdlog](https://github.com/gabime/spdlog)
 2. [gtest](https://github.com/google/googletest)
 3. [nlohmann/json](https://github.com/nlohmann/json)
+4. [abseil](https://github.com/abseil/abseil-cpp)
 
 ---
 ## 参考：
@@ -95,6 +96,7 @@ MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo�
 3. [leveldb](https://github.com/google/leveldb)
 4. [LSM树原理](https://zhuanlan.zhihu.com/p/181498475)
 5. [LSM Tree是什么?](https://www.zhihu.com/question/446544471/answer/2348883977)
+6. [WAL](https://zhuanlan.zhihu.com/p/258091002)  
 
 ---
 

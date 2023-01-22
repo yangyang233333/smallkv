@@ -51,6 +51,8 @@ file(GLOB_RECURSE SRC
         src/main.cpp)
 add_executable(${PROJECT_NAME} ${SRC})
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread nlohmann_json::nlohmann_json)
+# 链接abseil中的crc32静态库
+target_link_libraries(${PROJECT_NAME} PRIVATE libabsl_crc32c.a libabsl_crc_internal.a libabsl_raw_logging_internal.a)
 
 if (SMALLKV-UNITTEST)
     enable_testing()
@@ -82,6 +84,7 @@ if (SMALLKV-UNITTEST)
     file(GLOB_RECURSE SRC_TEST
             tests/*.cpp)
     add_executable(smallkv-unitest ${SRC_WITHOUT_MAIN} ${SRC_TEST})
-    # 需要链接一下
     target_link_libraries(smallkv-unitest PRIVATE gtest pthread nlohmann_json::nlohmann_json)
+    target_link_libraries(smallkv-unitest PRIVATE libabsl_crc32c.a libabsl_crc_internal.a libabsl_raw_logging_internal.a)
+
 endif (SMALLKV-UNITTEST)
