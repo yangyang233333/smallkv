@@ -22,7 +22,7 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [x] FileWriter/FileReader(todo: 支持mmap)
 - [x] SSTable
 - [ ] SST文件的MANIFEST
-- [ ] WAL模块
+- [x] WAL模块
 - [ ] 读流程
 - [ ] 写流程
 - [ ] Compaction模块

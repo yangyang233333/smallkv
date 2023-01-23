@@ -40,6 +40,8 @@ file(GLOB_RECURSE SRC
         src/log/*.h
         src/memory/*.cpp
         src/memory/*.h
+        src/memtable/*.cpp
+        src/memtable/*.h
         src/recovery/*.cpp
         src/recovery/*.h
         src/table/*.cpp
@@ -73,6 +75,8 @@ if (SMALLKV-UNITTEST)
             src/log/*.h
             src/memory/*.cpp
             src/memory/*.h
+            src/memtable/*.cpp
+            src/memtable/*.h
             src/recovery/*.cpp
             src/recovery/*.h
             src/table/*.cpp
