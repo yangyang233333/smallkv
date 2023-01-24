@@ -27,6 +27,10 @@ namespace smallkv {
 
         std::string name() override { return "ByteComparator"; }
 
+        int32_t operator()(const std::string &key_a, const std::string &key_b) {
+            return key_a.compare(key_b);
+        }
+
         int32_t compare(const std::string &key_a, const std::string &key_b) override {
             return key_a.compare(key_b);
         }

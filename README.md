@@ -15,14 +15,15 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 ---
 ## 进度
 
-- [ ] memtable: 跳表
+- [x] 跳表
 - [x] 布隆过滤器
 - [x] 内存池
 - [x] 缓存模块
 - [x] FileWriter/FileReader(todo: 支持mmap)
 - [x] SSTable
-- [ ] SST文件的MANIFEST
+- [ ] MANIFEST
 - [x] WAL模块
+- [ ] memtable
 - [ ] 读流程
 - [ ] 写流程
 - [ ] Compaction模块
