@@ -29,9 +29,18 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [ ] Compaction模块
 
 ---
-## build
+## BUILD
 
 You must use the g++ compiler and Ubuntu 22.04 system.
+### build from docker (Highly recommended)
+```shell
+docker pull qianyy2333/smallkv-test
+docker run -it -v /{smallkv代码所在的目录}:/test qianyy2333/smallkv-test /bin/bash
+./build.sh         ## 编译
+./main_run.sh      ## 主程序
+./unittest_run.sh  ## 单元测试
+```
+
 ### build from source code:
 ```shell
 # 安装依赖
@@ -45,14 +54,7 @@ apt update && apt upgrade -y && apt install cmake make git g++ gcc -y && cd ~ \
 ./main_run.sh      ## 主程序
 ./unittest_run.sh  ## 单元测试
 ```
-### build from docker (Highly recommended)
-```shell
-docker pull qianyy2333/smallkv-test
-docker run -it -v /{smallkv代码所在的目录}:/test qianyy2333/smallkv-test /bin/bash
-./build.sh         ## 编译
-./main_run.sh      ## 主程序
-./unittest_run.sh  ## 单元测试
-```
+
 ---
 ## 设计
 ### 1. **内存池设计**
