@@ -20,7 +20,7 @@ namespace smallkv {
      * 注：线程不安全、不支持重复的key插入
      *
      * */
-    template<typename Key>
+    template<typename Key, typename Value>
     class SkipList {
         class Node;
 
@@ -28,7 +28,7 @@ namespace smallkv {
         explicit SkipList(std::shared_ptr<FreeListAllocate> alloc);
 
         // 插入key
-        void Insert(const Key &key);
+        void Insert(const Key &key, const Value &value);
 
         // 删除key
         void Delete(const Key &key);
@@ -47,6 +47,8 @@ namespace smallkv {
             std::cout << "============= DEBUG =============" << std::endl;
         }
 
+        inline int GetSize() { return size; }
+
     private:
         int RandomLevel();
 
@@ -55,7 +57,7 @@ namespace smallkv {
         // 找到key节点的前缀节点，也就是找到key的待插入位置
         void FindPrevNode(const Key &key, std::vector<Node *> &prev);
 
-        inline Node *NewNode(const Key &key, int level);
+        inline Node *NewNode(const Key &key, int level, const Value &value);
 
     private:
         Node *head_; // 头结点，高度为SkipListConfig::kMaxHeight，不存数据
@@ -68,8 +70,8 @@ namespace smallkv {
         std::shared_ptr<spdlog::logger> logger = log::get_logger();
     };
 
-    template<typename Key>
-    void SkipList<Key>::Delete(const Key &key) {
+    template<typename Key, typename Value>
+    void SkipList<Key, Value>::Delete(const Key &key) {
         if (Contains(key) == false) {
             logger->warn("The value you want to delete does not exist. Key={}", key);
             return;
@@ -114,7 +116,7 @@ namespace smallkv {
         }
 //        assert(level_of_target_node > 0);
 //        assert(level_of_target_node <= prev.size());
-        logger->info("level_of_target_node={}", level_of_target_node);
+//        logger->info("level_of_target_node={}", level_of_target_node);
         for (int i = 0; i < level_of_target_node; ++i) {
             if (prev[i] != nullptr) {
                 assert(prev[i]->next[i] != nullptr);
@@ -123,8 +125,8 @@ namespace smallkv {
         }
     }
 
-    template<typename Key>
-    bool SkipList<Key>::Contains(const Key &key) {   // 存在key则返回true
+    template<typename Key, typename Value>
+    bool SkipList<Key, Value>::Contains(const Key &key) {   // 存在key则返回true
         int level = GetCurrentHeight() - 1;
         auto cur = head_;
         while (true) {
@@ -151,8 +153,8 @@ namespace smallkv {
         }
     }
 
-    template<typename Key>
-    void SkipList<Key>::Insert(const Key &key) {
+    template<typename Key, typename Value>
+    void SkipList<Key, Value>::Insert(const Key &key, const Value &value) {
         if (Contains(key)) {
             logger->warn("A duplicate key was inserted. Key={}", key);
             return;
@@ -168,7 +170,7 @@ namespace smallkv {
         FindPrevNode(key, prev);
         int level_of_new_node = RandomLevel();
         max_level = std::max(level_of_new_node, max_level); // 更新最大高度
-        auto newNode = NewNode(key, level_of_new_node);
+        auto newNode = NewNode(key, level_of_new_node, value);
 
         for (int i = 0; i < newNode->GetLevel(); ++i) {
             if (prev[i] == nullptr) {
@@ -181,20 +183,20 @@ namespace smallkv {
         }
     }
 
-    template<typename Key>
-    int SkipList<Key>::GetCurrentHeight() {
+    template<typename Key, typename Value>
+    int SkipList<Key, Value>::GetCurrentHeight() {
         return max_level;
     }
 
-    template<typename Key>
-    typename SkipList<Key>::Node *SkipList<Key>::NewNode(const Key &key, int level) {
+    template<typename Key, typename Value>
+    typename SkipList<Key, Value>::Node *SkipList<Key, Value>::NewNode(const Key &key, int level, const Value &value) {
         // todo: 不确定FreeListAllocate实现有没有问题，
         //  所以此处先使用系统allocator，稳定了再换。
-        return new Node(key, level);
+        return new Node(key, level, value);
     }
 
-    template<typename Key>
-    void SkipList<Key>::FindPrevNode(
+    template<typename Key, typename Value>
+    void SkipList<Key, Value>::FindPrevNode(
             const Key &key, std::vector<Node *> &prev) {
         int level = GetCurrentHeight() - 1;
         auto cur = head_;
@@ -213,8 +215,8 @@ namespace smallkv {
         }
     }
 
-    template<typename Key>
-    int SkipList<Key>::RandomLevel() {
+    template<typename Key, typename Value>
+    int SkipList<Key, Value>::RandomLevel() {
         int level = 1;
         while (level < SkipListConfig::kMaxHeight && rand() & 1) {
             ++level;
@@ -222,19 +224,21 @@ namespace smallkv {
         return level;
     }
 
-    template<typename Key>
-    SkipList<Key>::SkipList(std::shared_ptr<FreeListAllocate> alloc)
+    template<typename Key, typename Value>
+    SkipList<Key, Value>::SkipList(std::shared_ptr<FreeListAllocate> alloc)
             :alloc(std::move(alloc)) {
         srand(time(0));
-        head_ = NewNode("", SkipListConfig::kMaxHeight);
+        head_ = NewNode("", SkipListConfig::kMaxHeight, "");
         max_level = 1;
         size = 0;
     }
 
-    template<typename Key>
-    class SkipList<Key>::Node {
+    template<typename Key, typename Value>
+    class SkipList<Key, Value>::Node {
     public:
-        Node(const Key &key, int level) : key(key) {
+        Node() = delete;
+
+        Node(const Key &key, int level, const Value &value) : key(key), value(value) {
             next.resize(level, nullptr);
         }
 
@@ -243,6 +247,7 @@ namespace smallkv {
         inline int GetLevel() { return next.size(); }
 
         const Key key;
+        Value value;
         std::vector<Node *> next;
     };
 }

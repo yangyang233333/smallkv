@@ -12,29 +12,29 @@
 namespace smallkv {
     TEST(skiplist, Insert) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
-        skiplist->Insert("1");
-        skiplist->Insert("2");
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
+        skiplist->Insert("1", "value_1");
+        skiplist->Insert("2", "value_2");
     }
 
     TEST(skiplist, Insert2) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
         for (int i = 0; i < 100; ++i) {
-            skiplist->Insert(std::to_string(i));
+            skiplist->Insert(std::to_string(i), "value_" + std::to_string(i));
         }
     }
 
     TEST(skiplist, Contains) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
 
-        skiplist->Insert("1");
-        skiplist->Insert("3");
-        skiplist->Insert("5");
+        skiplist->Insert("1", "value_1");
+        skiplist->Insert("3", "value_3");
+        skiplist->Insert("5", "value_5");
         EXPECT_EQ(skiplist->Contains("1"), true);
         EXPECT_EQ(skiplist->Contains("3"), true);
         EXPECT_EQ(skiplist->Contains("5"), true);
@@ -46,8 +46,8 @@ namespace smallkv {
 
     TEST(skiplist, Contains2) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
 
         const int N = 2000;
         srand(time(0));
@@ -61,7 +61,7 @@ namespace smallkv {
             }
         }
         for (const auto &ye: yes) {
-            skiplist->Insert(ye);
+            skiplist->Insert(ye, "value_" + ye);
         }
 
         for (const auto &y: yes) {
@@ -74,12 +74,12 @@ namespace smallkv {
 
     TEST(skiplist, Delete) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
 
-        skiplist->Insert("1");
-        skiplist->Insert("3");
-        skiplist->Insert("5");
+        skiplist->Insert("1", "value_1");
+        skiplist->Insert("3", "value_3");
+        skiplist->Insert("5", "value_5");
         EXPECT_EQ(skiplist->Contains("1"), true);
         EXPECT_EQ(skiplist->Contains("3"), true);
         EXPECT_EQ(skiplist->Contains("5"), true);
@@ -94,11 +94,11 @@ namespace smallkv {
 
     TEST(skiplist, Delete2) {
         auto alloc = std::make_shared<FreeListAllocate>();
-        std::shared_ptr<SkipList<std::string>> skiplist =
-                std::make_shared<SkipList<std::string>>(alloc);
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
         const int N = 2000;
         for (int i = 0; i < N; ++i) {
-            skiplist->Insert(std::to_string(i));
+            skiplist->Insert(std::to_string(i), "value_" + std::to_string(i));
             int flag = rand() & 0x1;
             if (flag == 1) {
                 skiplist->Delete(std::to_string(i));
