@@ -108,4 +108,41 @@ namespace smallkv {
             }
         }
     }
+
+    TEST(skiplist, Get) {
+        auto alloc = std::make_shared<FreeListAllocate>();
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
+
+        skiplist->Insert("1", "value_1");
+        skiplist->Insert("3", "value_3");
+        skiplist->Insert("5", "value_5");
+
+        EXPECT_EQ(skiplist->Get("0"), std::nullopt);
+        EXPECT_EQ(skiplist->Get("1"), "value_1");
+        EXPECT_EQ(skiplist->Get("2"), std::nullopt);
+        EXPECT_EQ(skiplist->Get("3"), "value_3");
+        EXPECT_EQ(skiplist->Get("4"), std::nullopt);
+        EXPECT_EQ(skiplist->Get("5"), "value_5");
+    }
+
+    TEST(skiplist, Get2) {
+        auto alloc = std::make_shared<FreeListAllocate>();
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
+        const int N = 1234;
+        for (int i = 0; i < N; ++i) {
+            skiplist->Insert(std::to_string(i), "value_" + std::to_string(i));
+            if (i & 1) {
+                skiplist->Delete(std::to_string(i));
+            }
+        }
+        for (int i = 0; i < N; ++i) {
+            if (i & 1) {
+                EXPECT_EQ(skiplist->Get(std::to_string(i)), std::nullopt);
+            } else {
+                EXPECT_EQ(skiplist->Get(std::to_string(i)), "value_" + std::to_string(i));
+            }
+        }
+    }
 }

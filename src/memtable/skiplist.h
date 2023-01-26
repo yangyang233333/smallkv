@@ -2,10 +2,11 @@
 // Created by qianyy on 2023/1/23.
 //
 #include <memory>
+#include <vector>
 #include <cstdlib>
 #include <utility>
-#include <vector>
 #include <iostream>
+#include <optional>
 #include "log/log.h"
 #include "memory/allocate.h"
 #include "skiplist_config.h"
@@ -27,7 +28,7 @@ namespace smallkv {
     public:
         explicit SkipList(std::shared_ptr<FreeListAllocate> alloc);
 
-        // 插入key
+        // 插入一个新的key
         void Insert(const Key &key, const Value &value);
 
         // 删除key
@@ -35,6 +36,9 @@ namespace smallkv {
 
         // 存在key则返回true
         bool Contains(const Key &key);
+
+        // 注：如果要找的key不存在，则返回nullopt
+        std::optional<Value> Get(const Key &key);
 
         // 仅用于DEBUG：打印表
         void OnlyUsedForDebugging_Print_() {
@@ -69,6 +73,36 @@ namespace smallkv {
 
         std::shared_ptr<spdlog::logger> logger = log::get_logger();
     };
+
+    template<typename Key, typename Value>
+    std::optional<Value> SkipList<Key, Value>::Get(const Key &key) {
+        int level = GetCurrentHeight() - 1;
+        auto cur = head_;
+        while (true) {
+            auto next = cur->next[level];
+            if (next == nullptr) {
+                if (level == 0) {
+                    // 遍历到这里说明key不存在
+                    return std::nullopt;
+                } else {
+                    --level;
+                }
+            } else {
+                if (next->key == key) {
+                    return next->value; // 找到了
+                } else if (next->key < key) {
+                    cur = next;
+                } else if (next->key > key) {
+                    if (level == 0) {
+                        // 遍历到这里说明key不存在
+                        return std::nullopt;
+                    } else {
+                        --level; // 在非最底层遇到了大于key的数，应该下降
+                    }
+                }
+            }
+        }
+    }
 
     template<typename Key, typename Value>
     void SkipList<Key, Value>::Delete(const Key &key) {
