@@ -5,6 +5,9 @@
 #include "codec.h"
 
 namespace smallkv::utils {
+    void EncodeFixed8(char *buf, uint8_t val) {
+        buf[0] = val & 0xff;
+    }
 
     void EncodeFixed32(char *buf, uint32_t val) {
         buf[0] = val & 0xff;
@@ -22,6 +25,10 @@ namespace smallkv::utils {
         buf[5] = (val >> 40) & 0xff;
         buf[6] = (val >> 48) & 0xff;
         buf[7] = (val >> 56) & 0xff;
+    }
+
+    uint8_t DecodeFixed8(const char *data) {
+        return *reinterpret_cast<const uint8_t*>(data);
     }
 
     uint32_t DecodeFixed32(const char *data) {

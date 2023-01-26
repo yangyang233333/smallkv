@@ -8,13 +8,23 @@
 #define SMALLKV_CODEC_H
 namespace smallkv::utils {
     // 编解码
+    void EncodeFixed8(char *buf, uint8_t val);
+
     void EncodeFixed32(char *buf, uint32_t val);
 
     void EncodeFixed64(char *buf, uint64_t val);
 
+    uint8_t DecodeFixed8(const char *data);
+
     uint32_t DecodeFixed32(const char *data);
 
     uint64_t DecodeFixed64(const char *data);
+
+    inline void PutFixed8(std::string &dst, uint8_t val) {
+        char buf[sizeof(val)];
+        EncodeFixed8(buf, val);
+        dst.append(buf, sizeof(val));
+    }
 
     inline void PutFixed32(std::string &dst, uint32_t val) {
         char buf[sizeof(val)];
