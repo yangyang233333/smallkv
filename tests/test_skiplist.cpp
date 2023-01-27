@@ -145,4 +145,38 @@ namespace smallkv::unittest {
             }
         }
     }
+
+
+    TEST(skiplist, GetMemUsage_and_GetSize) {
+        auto alloc = std::make_shared<FreeListAllocate>();
+        std::shared_ptr<SkipList<std::string, std::string>> skiplist =
+                std::make_shared<SkipList<std::string, std::string>>(alloc);
+
+        EXPECT_EQ(skiplist->GetSize(), 0);
+        EXPECT_EQ(skiplist->GetMemUsage(), 0);
+
+        skiplist->Insert("1", "value_1");
+        EXPECT_EQ(skiplist->GetSize(), 1);
+        EXPECT_EQ(skiplist->GetMemUsage(), 8);
+
+        skiplist->Insert("3", "value_3");
+        EXPECT_EQ(skiplist->GetSize(), 2);
+        EXPECT_EQ(skiplist->GetMemUsage(), 16);
+
+        skiplist->Insert("5", "value_5");
+        EXPECT_EQ(skiplist->GetSize(), 3);
+        EXPECT_EQ(skiplist->GetMemUsage(), 24);
+
+        skiplist->Delete("1");
+        EXPECT_EQ(skiplist->GetSize(), 2);
+        EXPECT_EQ(skiplist->GetMemUsage(), 16);
+
+        skiplist->Delete("3");
+        EXPECT_EQ(skiplist->GetSize(), 1);
+        EXPECT_EQ(skiplist->GetMemUsage(), 8);
+
+        skiplist->Delete("5");
+        EXPECT_EQ(skiplist->GetSize(), 0);
+        EXPECT_EQ(skiplist->GetMemUsage(), 0);
+    }
 }

@@ -53,6 +53,8 @@ namespace smallkv {
 
         inline int GetSize() { return size; }
 
+        inline int64_t GetMemUsage() { return mem_usage; }
+
     private:
         int RandomLevel();
 
@@ -68,8 +70,9 @@ namespace smallkv {
 
         std::shared_ptr<FreeListAllocate> alloc;
 
-        int max_level; // 当前表的最大高度节点
-        int64_t size = 0; //表中数据量
+        int max_level;         // 当前表的最大高度节点
+        int64_t size = 0;      // 表中数据量(kv键值对数量)
+        int64_t mem_usage = 0; // kv键值对所占用的内存大小，单位：Byte
 
         std::shared_ptr<spdlog::logger> logger = log::get_logger();
     };
@@ -115,7 +118,7 @@ namespace smallkv {
         // todo： 这里可以优化为 std::vector<Node *> prev(GetCurrentHeight, nullptr);
         //  可以减少一定的计算量，后期优化性能时考虑
         std::vector<Node *> prev(SkipListConfig::kMaxHeight, nullptr);
-//        FindPrevNode(key, prev);
+
         int level = GetCurrentHeight() - 1;
         auto cur = head_;
         int level_of_target_node = -1;// 目标节点的层数
@@ -126,7 +129,6 @@ namespace smallkv {
                     logger->error("A error point.");
                     break; // 遍历完成. 实际上这个分支不可能到达
                 } else {
-//                    prev[level] = cur;
                     --level;
                 }
             } else {
@@ -148,9 +150,11 @@ namespace smallkv {
                 }
             }
         }
-//        assert(level_of_target_node > 0);
-//        assert(level_of_target_node <= prev.size());
-//        logger->info("level_of_target_node={}", level_of_target_node);
+
+        // 更新内存占用
+        mem_usage -= key.size();
+        mem_usage -= prev[0]->next[0]->value.size(); // prev[0]->next[0]指向待删除的节点
+
         for (int i = 0; i < level_of_target_node; ++i) {
             if (prev[i] != nullptr) {
                 assert(prev[i]->next[i] != nullptr);
@@ -195,6 +199,11 @@ namespace smallkv {
         }
 
         ++size; // 更新size
+
+        // todo：这种写法导致了Key、Value必须为string、string_view类型，
+        //  模板名存实亡，后续需要改进。
+        mem_usage += key.size();
+        mem_usage += value.size();
 
         // todo： 这里可以优化为 std::vector<Node *> prev(GetCurrentHeight, nullptr);
         //  可以减少一定的计算量，后期优化性能时考虑

@@ -55,6 +55,8 @@ namespace smallkv {
             this->Insert(OpType::kDeletion, key, "");
         }
 
+        inline int64_t GetMemUsage() { return ordered_table_->GetMemUsage(); }
+
         bool Contains(const std::string_view &key);
 
         // 如果不存在则返回nullopt
