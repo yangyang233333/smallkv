@@ -9,7 +9,7 @@
 #include "../src/utils/codec.h"
 #include "../src/db/offset_info.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(data_block_builder, add) {
         auto logger = log::get_logger();
         auto builder = std::make_unique<DataBlockBuilder>();

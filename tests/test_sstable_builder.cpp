@@ -8,7 +8,7 @@
 #include "../src/file/file_reader.h"
 #include "../src/utils/codec.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     /*
      * SST结构
      * SSTable的数据排布schema：

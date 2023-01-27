@@ -9,7 +9,7 @@
 #include "memtable/skiplist.h"
 #include "memory/allocate.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(skiplist, Insert) {
         auto alloc = std::make_shared<FreeListAllocate>();
         std::shared_ptr<SkipList<std::string, std::string>> skiplist =

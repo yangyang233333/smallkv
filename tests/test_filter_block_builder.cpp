@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "../src/table/filter_block_builder.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(filter_block_builder, basic) {
         std::vector<std::string> data;
         for (int i = 0; i < 10 * 10000; ++i) {

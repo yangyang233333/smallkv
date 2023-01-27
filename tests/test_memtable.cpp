@@ -9,7 +9,7 @@
 #include "memtable/memtable.h"
 #include "memory/allocate.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(MemTable, Insert__Add) {
         auto alloc = std::make_shared<FreeListAllocate>();
         auto mem_table = std::make_shared<MemTable>(alloc);

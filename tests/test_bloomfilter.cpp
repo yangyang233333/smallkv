@@ -6,7 +6,7 @@
 #include "../src/filter/bloom_filter.h"
 #include "../src/filter/filter_policy.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(BloomFilter, basic) {
         std::vector<std::string> data;
         for (int i = 0; i < 10 * 10000; ++i) {

@@ -8,7 +8,7 @@
 #include "../src/file/file_writer.h"
 #include "../src/log/log.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(file_writer, basic) {
         auto logger = log::get_logger();
         std::string path = "./build/tests.sst";

@@ -10,7 +10,7 @@
 #include "../src/cache/cache.h"
 #include "../src/cache/cache_policy.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(lru_cache, insert) {
         auto cache_holder = std::make_unique<Cache<std::string, std::string>>(5000);
 

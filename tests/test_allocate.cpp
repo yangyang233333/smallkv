@@ -7,7 +7,7 @@
 #include "../src/memory/allocate.h"
 #include "../src/log/log.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
 
     TEST(FreeListAllocate_Allocate, basic) {
         std::unique_ptr<FreeListAllocate> allocator = std::make_unique<FreeListAllocate>();

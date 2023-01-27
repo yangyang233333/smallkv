@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include "../src/utils/murmur_hash2.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(MurmurHash, basic) {
         EXPECT_EQ(utils::murmur_hash2("123", 3), 1023762986);
     }

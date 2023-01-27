@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "../src/table/footer_builder.h"
 
-namespace smallkv {
+namespace smallkv::unittest {
     TEST(FooterBuilder, basic) {
         /*
          * Footer模块_data数据schema如下所示：
