@@ -3,8 +3,12 @@
 //
 #include "skiplist.h"
 #include "memtable.h"
+
+#include <utility>
 #include "utils/codec.h"
 #include "log/log.h"
+#include "table/sstable_builder.h"
+#include "memtable_iterator.h"
 
 namespace smallkv {
     MemTable::MemTable(std::shared_ptr<FreeListAllocate> alloc) : alloc(std::move(alloc)) {
@@ -42,5 +46,21 @@ namespace smallkv {
 
     std::optional<std::string> MemTable::Get(const std::string_view &key) {
         return ordered_table_->Get(key.data());
+    }
+
+    void MemTable::MemTableToL1SST(const std::string &sst_filepath,
+                                   std::shared_ptr<SSTableBuilder> sstable_builder) {
+
+//        sstable_builder->add();
+
+
+    }
+
+    MemTableIterator *MemTable::NewIter() {
+        return new MemTableIterator(this->ordered_table_.get());
+    }
+
+    int64_t MemTable::GetMemUsage() {
+        return ordered_table_->GetMemUsage();
     }
 }

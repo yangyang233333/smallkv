@@ -55,6 +55,32 @@ namespace smallkv {
 
         inline int64_t GetMemUsage() { return mem_usage; }
 
+        // 迭代skiplist，主要是给MemTable中的MemeIterator调用
+        class SkipListIterator {
+        public:
+            explicit SkipListIterator(const SkipList *list);
+
+            // 如果当前iter指向的位置有效，则返回true
+            bool Valid();
+
+            const Key &key();
+
+            const Value &value();
+
+            void Next();
+
+            // todo: Prev暂时不支持，需要修改底层的跳变api，后续有空再说
+            void Prev() = delete;
+
+            // 将当前node移到表头
+            // 必须要先调用此函数才可以进行迭代
+            void MoveToFirst();
+
+        private:
+            const SkipList *list_;
+            Node *node; // 当前iter指向的节点
+        };
+
     private:
         int RandomLevel();
 
@@ -76,6 +102,39 @@ namespace smallkv {
 
         std::shared_ptr<spdlog::logger> logger = log::get_logger();
     };
+
+    template<typename Key, typename Value>
+    void SkipList<Key, Value>::SkipListIterator::MoveToFirst() {
+        node = list_->head_->next[0];
+    }
+
+    template<typename Key, typename Value>
+    void SkipList<Key, Value>::SkipListIterator::Next() {
+        assert(Valid());
+        node = node->next[0]; // 遍历肯定是在跳表最底层进行遍历，所以是0
+    }
+
+    template<typename Key, typename Value>
+    const Key &SkipList<Key, Value>::SkipListIterator::key() {
+        assert(Valid());
+        return node->key;
+    }
+
+    template<typename Key, typename Value>
+    const Value &SkipList<Key, Value>::SkipListIterator::value() {
+        assert(Valid());
+        return node->value;
+    }
+
+    template<typename Key, typename Value>
+    bool SkipList<Key, Value>::SkipListIterator::Valid() {
+        return node != nullptr;
+    }
+
+    template<typename Key, typename Value>
+    SkipList<Key, Value>::SkipListIterator::SkipListIterator(const SkipList *list) : list_(list) {
+        node = nullptr;
+    }
 
     template<typename Key, typename Value>
     std::optional<Value> SkipList<Key, Value>::Get(const Key &key) {
