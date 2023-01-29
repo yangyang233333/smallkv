@@ -139,5 +139,4 @@ MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo�
 ---
 
 感谢 [JetBrains](https://jb.gg/OpenSourceSupport) 捐献的免费许可证帮助我们开发smallkv。  
-Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv
-** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
+Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
