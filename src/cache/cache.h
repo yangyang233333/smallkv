@@ -50,6 +50,12 @@ namespace smallkv {
             return caches[sharding_index]->get(key);
         }
 
+        // 存在则返回true
+        bool contains(const K &key) {
+            uint64_t sharding_index = hash_fn(key) % SHARDING_NUM;
+            return caches[sharding_index]->contains(key);
+        }
+
         // 释放节点(引用计数减一)
         void release(const K &key) {
             uint64_t sharding_index = hash_fn(key) % SHARDING_NUM;
