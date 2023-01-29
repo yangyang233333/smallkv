@@ -8,7 +8,7 @@
 #include "log_format.h"
 
 namespace smallkv {
-    DBStatus WALWriter::AddLog(const std::string_view &log, bool need_flush) {
+    DBStatus WALWriter::AddLog(const std::string_view &log) {
         char header[WALConfig::kHeaderSize];
         /*
          * header的schema如下：
@@ -29,7 +29,10 @@ namespace smallkv {
         header[7] = (len >> 24) & 0xff;
         auto s = writableFile->append(header, WALConfig::kHeaderSize);
         assert(s == Status::Success);
-        s = writableFile->append(log.data(), static_cast<int32_t>(len), need_flush);
+        s = writableFile->append(log.data(), static_cast<int32_t>(len), true);
+
+        writableFile->sync(); // 必须调用，否则不能保证持久化日志
+
         assert(s == Status::Success);
         return Status::Success;
     }

@@ -16,5 +16,5 @@ test_temp
 ref
 build/*
 
-storage
-db_storage
+# 数据库的输出目录
+output

@@ -18,8 +18,8 @@ namespace smallkv {
         alloc = std::make_shared<FreeListAllocate>();
         mem_table = std::make_shared<MemTable>(alloc);
         logger = log::get_logger();
-        auto file_writer_ = std::make_shared<FileWriter>(options_.DB_DIR);
-        wal_writer = std::make_shared<WALWriter>(file_writer_);
+
+        wal_writer = std::make_shared<WALWriter>(std::make_shared<FileWriter>(options_.WAL_DIR));
 
         cache = std::make_shared<Cache<std::string, std::string>>(options_.CACHE_SIZE);
         cache->register_clean_handle([](const std::string &key, std::string *val) {

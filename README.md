@@ -25,8 +25,9 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [ ] MANIFEST
 - [x] WAL模块
 - [x] memtable
-- [ ] 读流程
-- [ ] 写流程
+- [x] 读流程
+- [x] 写流程
+- [ ] BatchPut、BatchDelete
 - [ ] Compaction模块
 - [ ] 用FreeListAllocate(src/memory/allocate.h)替换系统内存分配器
 

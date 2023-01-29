@@ -1,4 +1,5 @@
 rm -rf build
+rm -rf output
 
 start=`date +%s`
 cmake -S . -B build
