@@ -14,6 +14,10 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 
 ---
 
+## 客户端演示
+基本操作类似Redis，如下图所示：  
+![cli](./img/client_demo.png)
+
 ## 进度
 
 - [x] 跳表
@@ -30,6 +34,7 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 - [ ] BatchPut、BatchDelete
 - [ ] Compaction模块
 - [ ] 用FreeListAllocate(src/memory/allocate.h)替换系统内存分配器
+- [x] 简易客户端：smallkv-cli
 
 ---
 

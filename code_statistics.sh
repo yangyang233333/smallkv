@@ -1,1 +1,1 @@
-cloc src/ docker/ tests/ CMakeLists.txt *sh *md
+cloc src/ docker/ tests/ CMakeLists.txt *sh *md cli/

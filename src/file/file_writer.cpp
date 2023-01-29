@@ -48,7 +48,7 @@ namespace smallkv {
             data_offset += len;
         } else {
             // 缓冲区不够
-            memcpy(buffer+buffer_offset, data, remain_buf_size);
+            memcpy(buffer + buffer_offset, data, remain_buf_size);
             len -= remain_buf_size;
             buffer_offset += remain_buf_size;
             data_offset += remain_buf_size;
@@ -61,7 +61,7 @@ namespace smallkv {
                     assert(rsp == Status::Success);
                 }
                 int need_cpy = std::min(len, BUFFER_SIZE - buffer_offset);
-                memcpy(buffer+buffer_offset, data + data_offset, need_cpy);
+                memcpy(buffer + buffer_offset, data + data_offset, need_cpy);
                 data_offset += need_cpy;
                 len -= need_cpy;
                 buffer_offset += need_cpy;
@@ -100,6 +100,8 @@ namespace smallkv {
 
     DBStatus FileWriter::buf_persist(const char *data, int32_t len) {
         auto ret = write(fd, data, len);
+        // todo: 此处应该检查已经写入的ret，没有完全写完则应该继续写，而不是用assert(ret == len);
+        //  此外在测试中还发现此处可能写入失败，ret=-1
         assert(ret == len);
         buffer_offset = 0; // flush buf后，需要设置offset为0
         return Status::Success;

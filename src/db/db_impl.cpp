@@ -142,7 +142,7 @@ namespace smallkv {
         // todo
 
 
-        return Status::Success;
+        return Status::ExecFailed;
     }
 
     DBStatus DBImpl::BatchPut(const WriteOptions &options) {
