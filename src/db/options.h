@@ -33,7 +33,7 @@ namespace smallkv {
     }
 
     inline Options MakeOptionsForProduction() {
-
+        return Options{};
     }
 
     // 读时候的配置信息
