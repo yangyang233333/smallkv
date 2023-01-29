@@ -15,3 +15,6 @@ test_temp
 # others
 ref
 build/*
+
+storage
+db_storage

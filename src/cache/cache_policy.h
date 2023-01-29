@@ -25,6 +25,9 @@ namespace smallkv {
         // 查
         virtual Node<K, V> *get(const K &key) = 0;
 
+        // 存在则返回true
+        virtual bool contains(const K &key) = 0;
+
         // 释放节点(引用计数减一)
         virtual void release(const K &key) = 0;
 

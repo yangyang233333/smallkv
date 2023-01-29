@@ -24,6 +24,7 @@ namespace smallkv {
         static constexpr DBStatus Success = {1, "Success."};
         static constexpr DBStatus InvalidArgs = {2, "Invalid args."};
         static constexpr DBStatus ExecFailed = {3, "Exec failed."};
+        static constexpr DBStatus NotImpl = {4, "Not implemented."};
     };
 }
 

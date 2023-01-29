@@ -16,6 +16,10 @@ namespace smallkv {
 
     class FreeListAllocate;
 
+    class SSTableBuilder;
+
+    class MemTableIterator;
+
     /*
      * Insert逻辑：
      * 1. Add key, OpType=kAdd
@@ -55,10 +59,24 @@ namespace smallkv {
             this->Insert(OpType::kDeletion, key, "");
         }
 
+        // 获得memtable底层的跳表的内存占用
+        int64_t GetMemUsage();
+
+        // 获得memtable底层的跳表的key数量
+        int64_t GetSize();
+
         bool Contains(const std::string_view &key);
 
         // 如果不存在则返回nullopt
         std::optional<std::string> Get(const std::string_view &key);
+
+        // 将内存中的memtable转为磁盘中的l1 sst
+        // sst_filepath格式为"/a/b/c.sst"
+        void ConvertToL1SST(const std::string &sst_filepath,
+                            std::shared_ptr<SSTableBuilder> sstable_builder);
+
+        // 外部调用，创建一个MemIter，来遍历MemTable底层的跳表，本质上有跳表中的Iter提供支持
+        MemTableIterator *NewIter();
 
     private:
         // Add、Update、Delete都属于Insert
@@ -66,6 +84,9 @@ namespace smallkv {
         // OpType = {kDeletion, kAdd, kUpdate}
         void Insert(OpType op_type, const std::string_view &key,
                     const std::string_view &value);
+
+        // 在leveldb中学到的设计模式：声明一个友元迭代器，然后提供一个NewIter的public方法给外部创建迭代器
+        friend class MemTableIterator;
 
     private:
         std::shared_ptr<SkipList<std::string, std::string>> ordered_table_;

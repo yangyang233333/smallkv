@@ -3,8 +3,12 @@
 //
 #include "skiplist.h"
 #include "memtable.h"
+
+#include <utility>
 #include "utils/codec.h"
 #include "log/log.h"
+#include "table/sstable_builder.h"
+#include "memtable_iterator.h"
 
 namespace smallkv {
     MemTable::MemTable(std::shared_ptr<FreeListAllocate> alloc) : alloc(std::move(alloc)) {
@@ -42,5 +46,32 @@ namespace smallkv {
 
     std::optional<std::string> MemTable::Get(const std::string_view &key) {
         return ordered_table_->Get(key.data());
+    }
+
+    void MemTable::ConvertToL1SST(const std::string &sst_filepath,
+                                  std::shared_ptr<SSTableBuilder> sstable_builder) {
+        // todo: 这里可能需要加锁。
+        auto iter = NewIter();
+        iter->MoveToFirst(); // 指向表头
+        while (iter->Valid()) {
+            sstable_builder->add(iter->key(), iter->value());
+            iter->Next();
+        }
+        logger->info("The L1 SST file is built.");
+
+        // todo：后续需要改为异步落盘
+        sstable_builder->finish_sst(); // sst文件写到磁盘
+    }
+
+    MemTableIterator *MemTable::NewIter() {
+        return new MemTableIterator(this->ordered_table_.get());
+    }
+
+    int64_t MemTable::GetMemUsage() {
+        return ordered_table_->GetMemUsage();
+    }
+
+    int64_t MemTable::GetSize() {
+        return ordered_table_->GetSize();
     }
 }

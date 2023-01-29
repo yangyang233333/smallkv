@@ -156,6 +156,12 @@ namespace smallkv {
             return *(iter->second);
         }
 
+        // 存在则返回true
+        bool contains(const K &key) {
+            ScopedLock<LockType> lock_guard(locker);
+            return index.find(key) != index.end();
+        }
+
         // 释放节点(引用计数减一)
         void release(const K &key) override {
             ScopedLock<LockType> lock_guard(locker);

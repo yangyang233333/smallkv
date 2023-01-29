@@ -38,5 +38,9 @@ namespace smallkv::utils {
         dst.append(buf, sizeof(val));
     }
 
+    // 构建形如"level_n_sst_i.sst"的文件名，其中n是level层数，i是该层的第i个sst文件
+    inline std::string BuildSSTPath(uint32_t n, uint32_t i) {
+        return "level_" + std::to_string(n) + "_sst_" + std::to_string(i) + ".sst";
+    }
 }
 #endif //SMALLKV_CODEC_H
