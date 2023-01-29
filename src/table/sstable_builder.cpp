@@ -35,7 +35,6 @@ namespace smallkv {
         //写入dataBlock
         dataBlockBuilder->add(key, val);
         ++key_count;
-        pre_key = key;
         // 如果DataBlockBuilder大小超过限制，则应该把DataBlockBuilder落盘，然后清空DataBlockBuilder
         if (dataBlockBuilder->size() > SSTConfigInfo::MAX_DATA_BLOCK_SIZE) {
             // 当add_restart_points函数被调用完成的时候，表明当前DataBlock
@@ -62,6 +61,7 @@ namespace smallkv {
             // 持久化完成后，清空当前dataBlockBuilder
             dataBlockBuilder->clear();
         }
+        pre_key = key;
         return Status::Success;
     }
 
