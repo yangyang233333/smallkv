@@ -48,12 +48,19 @@ namespace smallkv {
         return ordered_table_->Get(key.data());
     }
 
-    void MemTable::MemTableToL1SST(const std::string &sst_filepath,
-                                   std::shared_ptr<SSTableBuilder> sstable_builder) {
+    void MemTable::ConvertToL1SST(const std::string &sst_filepath,
+                                  std::shared_ptr<SSTableBuilder> sstable_builder) {
+        // todo: 这里可能需要加锁。
+        auto iter = NewIter();
+        iter->MoveToFirst(); // 指向表头
+        while (iter->Valid()) {
+            sstable_builder->add(iter->key(), iter->value());
+            iter->Next();
+        }
+        logger->info("The L1 SST file is built.");
 
-//        sstable_builder->add();
-
-
+        // todo：后续需要改为异步落盘
+        sstable_builder->finish_sst(); // sst文件写到磁盘
     }
 
     MemTableIterator *MemTable::NewIter() {
@@ -62,5 +69,9 @@ namespace smallkv {
 
     int64_t MemTable::GetMemUsage() {
         return ordered_table_->GetMemUsage();
+    }
+
+    int64_t MemTable::GetSize() {
+        return ordered_table_->GetSize();
     }
 }

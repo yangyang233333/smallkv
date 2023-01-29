@@ -62,6 +62,9 @@ namespace smallkv {
         // 获得memtable底层的跳表的内存占用
         int64_t GetMemUsage();
 
+        // 获得memtable底层的跳表的key数量
+        int64_t GetSize();
+
         bool Contains(const std::string_view &key);
 
         // 如果不存在则返回nullopt
@@ -69,9 +72,8 @@ namespace smallkv {
 
         // 将内存中的memtable转为磁盘中的l1 sst
         // sst_filepath格式为"/a/b/c.sst"
-        inline void MemTableToL1SST(const std::string &sst_filepath,
-                                    std::shared_ptr<SSTableBuilder> sstable_builder);
-
+        void ConvertToL1SST(const std::string &sst_filepath,
+                            std::shared_ptr<SSTableBuilder> sstable_builder);
 
         // 外部调用，创建一个MemIter，来遍历MemTable底层的跳表，本质上有跳表中的Iter提供支持
         MemTableIterator *NewIter();
