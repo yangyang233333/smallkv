@@ -58,7 +58,7 @@ namespace smallkv {
         ~WALWriter();
 
         // 添加一个log，默认情况下写完后进行flush
-        DBStatus AddLog(const std::string_view &log, bool need_flush = true);
+        DBStatus AddLog(const std::string_view &log);
 
     private:
         std::shared_ptr<FileWriter> writableFile;

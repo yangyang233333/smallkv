@@ -157,7 +157,7 @@ namespace smallkv {
         }
 
         // 存在则返回true
-        bool contains(const K &key) {
+        bool contains(const K &key) override {
             ScopedLock<LockType> lock_guard(locker);
             return index.find(key) != index.end();
         }

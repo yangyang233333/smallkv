@@ -10,16 +10,18 @@ namespace smallkv {
     struct Options {
         //todo: 之前的配置信息已经写到了xxx_config中，后续应该集中到这里
 
-        // 数据库的存储目录，需要自定义. 例如修改为："/home/db_storage"
-        std::string DB_DIR = "/mnt/c/Users/abc/Desktop/smallkv_proj/smallkv/db_storage";
+        // 数据库的存储目录，需要自定义
+//        std::string DB_DIR = "./output/db_storage";
+        std::string STORAGE_DIR = "./output/db_storage";
+
+        // WAL的存储路径，需要自定义
+        std::string WAL_DIR = "./output/wal_log.txt";
 
         // MEM_TABLE的最大大小，超过了就应该落盘
         size_t MEM_TABLE_MAX_SIZE = 4 * 1024 * 1024; // 4MB
 
         // 缓存的键值对数量
         uint32_t CACHE_SIZE = 4096;
-
-        std::string STORAGE_DIR = "./storage";
 
         // 表示当前L1SST的序号。 L1SST的命名类似level_1_sst_0.sst, level_1_sst_1.sst, ....
         // 开始的时候需要扫描 STORAGE_DIR 目录，找到下一个sst的LISST_NUM
