@@ -22,8 +22,8 @@ namespace smallkv {
 
     DBStatus DB::Get(const ReadOptions &options,
                      const std::string_view &key,
-                     std::string *value) {
-        return db_impl->Get(options, key, value);
+                     std::string *ret_value_ptr) {
+        return db_impl->Get(options, key, ret_value_ptr);
     }
 
     DBStatus DB::BatchPut(const WriteOptions &options) {

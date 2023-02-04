@@ -44,6 +44,8 @@ file(GLOB_RECURSE SRC
         src/memtable/*.h
         src/recovery/*.cpp
         src/recovery/*.h
+        src/sst_parser/*.cpp
+        src/sst_parser/*.h
         src/table/*.cpp
         src/table/*.h
         src/utils/*.cpp
@@ -73,6 +75,8 @@ file(GLOB_RECURSE SRC_WITHOUT_MAIN
         src/memtable/*.h
         src/recovery/*.cpp
         src/recovery/*.h
+        src/sst_parser/*.cpp
+        src/sst_parser/*.h
         src/table/*.cpp
         src/table/*.h
         src/utils/*.cpp

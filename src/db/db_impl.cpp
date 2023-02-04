@@ -12,6 +12,7 @@
 #include "wal/wal_writer.h"
 #include "file/file_writer.h"
 #include "table/sstable_builder.h"
+#include "sst_parser/sst_parser.h"
 
 namespace smallkv {
     DBImpl::DBImpl(Options options) : options_(std::move(options)) {
@@ -110,7 +111,7 @@ namespace smallkv {
 
     DBStatus DBImpl::Get(const ReadOptions &options,
                          const std::string_view &key,
-                         std::string *value) {
+                         std::string *ret_value_ptr) {
         assert(closed == false);
         /*
          * 读逻辑：
@@ -124,25 +125,35 @@ namespace smallkv {
 
         // 1. 读缓存
         if (cache->contains(key.data())) {
-            *value = *(cache->get(key.data())->val);
+            *ret_value_ptr = *(cache->get(key.data())->val);
+            logger->info("Cache hit.");
             return Status::Success;
         }
 
         // 2. 读memtable
         if (mem_table->Contains(key)) {
             auto val = mem_table->Get(key);
-            *value = mem_table->Get(key.data()).value();
+            *ret_value_ptr = mem_table->Get(key.data()).value();
             return Status::Success;
         }
 
         // 3. 依次读sst文件
-        // todo: 后续实现
+        //todo: 实际上需要从manifest获取sst文件，此处直接硬编码一个文件: level_0_sst_0.sst
+        std::string sst_path = options_.STORAGE_DIR + "level_0_sst_0.sst";
+        auto sst_parser = SSTParser(sst_path);
+        sst_parser.Parse();
+        auto val = sst_parser.Seek(key);
+        if (!val.has_value()) {
+            return Status::NotFound;
+        }
+        ret_value_ptr->append(val.value());
 
         // 4. 找到的数据写入缓存
-        // todo
+        //todo: 这里cache保存的是value的指针，然而val可能是临时值，需要优化，此处临时new 一下，性能拉胯
+        auto val_ = new std::string(val.value());
+        cache->insert(key.data(), val_);
 
-
-        return Status::ExecFailed;
+        return Status::Success;
     }
 
     DBStatus DBImpl::BatchPut(const WriteOptions &options) {

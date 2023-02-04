@@ -68,4 +68,9 @@ namespace smallkv {
     std::string &BloomFilter::data() {
         return bits_array;
     }
+
+    void BloomFilter::create_filter2(int32_t hash_func_num_, std::string &bits_array_) {
+        hash_func_num = hash_func_num_;
+        bits_array = bits_array_;
+    }
 };
