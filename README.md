@@ -16,6 +16,7 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 ---
 
 ## 客户端演示
+
 基本操作类似Redis，如下图所示：  
 ![cli](./img/client_demo.png)
 
@@ -115,7 +116,15 @@ IndexBlock存储对应的DataBlock中的最大key信息（注意：实际存储�
 
 ![footer_schema](./img/footer_schema.png)
 MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo记录了IndexBlock的offset（第一个IndexBlock的offset）和size（所有IndexBlock的总大小）。
- 
+
+### 4. **Read/Write Op**
+![rw_op](img/rw_op.png)
+- #### 4.1 Read
+先读缓存, 有则立即返回; 否则读memtable, 有则立即返回; 否则使用SST Parser解析磁盘的SST文件，找到对应的key.
+
+- #### 4.2 Write
+先写wal, 保证数据安全; 在写memtable和cache. 
+
 ---
 
 ## 第三方依赖：
@@ -132,11 +141,9 @@ MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo�
 1. [阿里云NewSQL数据库大赛](https://tianchi.aliyun.com/competition/entrance/531980/introduction)
 2. [corekv](https://github.com/hardcore-os/coreKV-CPP)
 3. [leveldb](https://github.com/google/leveldb)
-4. [LSM树原理](https://zhuanlan.zhihu.com/p/181498475)
-5. [LSM Tree是什么?](https://www.zhihu.com/question/446544471/answer/2348883977)
-6. [WAL](https://zhuanlan.zhihu.com/p/258091002)
-7. [Linux I/O: fsync, fflush, fwrite, mmap](https://juejin.cn/post/7001665675907301412)
+4. [Linux I/O: fsync, fflush, fwrite, mmap](https://juejin.cn/post/7001665675907301412)
 
 ---
- 
-Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
+
+Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv
+** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>
