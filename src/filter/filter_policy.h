@@ -27,6 +27,10 @@ namespace smallkv {
 
         virtual void create_filter(const std::vector<std::string> &keys) = 0;
 
+        // 主要用于读取sst的时候创建filter
+        virtual void create_filter2(int32_t hash_func_num_,
+                                    std::string &bits_array_) = 0;
+
         // 检查是否存在，如果为false表示一定不存在，true表示可能存在
         virtual bool exists(const std::string_view &key) = 0;
 

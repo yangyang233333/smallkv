@@ -42,7 +42,7 @@ namespace smallkv {
         // 将Key对应的值写到value地址上
         DBStatus Get(const ReadOptions &options,
                      const std::string_view &key,
-                     std::string *value);
+                     std::string *ret_value_ptr);
 
         // 关闭数据库：调用此函数可以保证所有已写入数据会被持久化到磁盘，
         DBStatus Close();

@@ -12,7 +12,8 @@
 namespace smallkv {
     class BloomFilter final : public FilterPolicy {
     public:
-        BloomFilter() = delete;
+        // 主要用于读取sst的时候创建filter
+        BloomFilter() = default;
 
 //        bits_per_key指每个key所占据的位数
 //        explicit BloomFilter(int32_t bits_per_key);
@@ -38,6 +39,9 @@ namespace smallkv {
         // 误差为1/10000时，存一千万条数据，布隆过滤器大小约为23MB
         // keys: 待插入的数据
         void create_filter(const std::vector<std::string> &keys) override;
+
+        // 主要用于读取sst的时候创建filter
+        void create_filter2(int32_t hash_func_num_, std::string &bits_array_) override;
 
         // 判断元素key是否存在
         // 返回值： false=不存在；true=可能存在；

@@ -12,6 +12,7 @@ smallkv 是一个列存的、基于LSM架构的存储引擎。
 
 **项目正在疯狂迭代中！！**
 
+**Attention**: This is a toy project, so it cannot be used in production environment.
 ---
 
 ## 客户端演示
@@ -137,6 +138,5 @@ MetaBlock_OffsetInfo记录了MetaBlock的size和offset，IndexBlock_OffsetInfo�
 7. [Linux I/O: fsync, fflush, fwrite, mmap](https://juejin.cn/post/7001665675907301412)
 
 ---
-
-感谢 [JetBrains](https://jb.gg/OpenSourceSupport) 捐献的免费许可证帮助我们开发smallkv。  
+ 
 Thanks to [JetBrains](https://jb.gg/OpenSourceSupport) for donating product licenses to help develop **smallkv** <a href="https://jb.gg/OpenSourceSupport"><img src="img/jb_beam.svg" width="94" align="center" /></a>

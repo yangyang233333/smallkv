@@ -32,7 +32,7 @@ namespace smallkv {
         // 将Key对应的值写到value地址上
         DBStatus Get(const ReadOptions &options,
                      const std::string_view &key,
-                     std::string *value);
+                     std::string *ret_value_ptr);
 
         // 批写
         DBStatus BatchPut(const WriteOptions &options);
