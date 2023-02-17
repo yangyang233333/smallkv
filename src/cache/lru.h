@@ -18,8 +18,6 @@ namespace smallkv {
      * 这里LockType是锁的类型，默认情况为NullLock即为无锁，
      * 可以传入三种锁：NullLock、MutexLock、SpinLock
      *
-     * 为什么不在运行时判断？例如if (LockType == "mutex_lock") lock.
-     * 答：运行时if存在开销。
      * */
     template<typename K, typename V, typename LockType = NullLock>
     class LRU final : public CachePolicy<K, V> {
