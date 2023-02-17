@@ -13,7 +13,7 @@ namespace smallkv {
     template<typename T>
     class ScopedLock {
     public:
-        ScopedLock(T &t) : local_lock(t) {
+        explicit ScopedLock(T &t) : local_lock(t) {
             local_lock.lock();
             is_locked = true;
         }
