@@ -6,8 +6,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/yangyang233333/smallkv)](https://github.com/yangyang233333/smallkv)
 [![LICENSE](https://img.shields.io/github/license/yangyang233333/smallkv.svg?style=flat-square)](https://github.com/yangyang233333/smallkv/blob/master/LICENSE)
 
-这个项目主要源于一次阿里云的newsql数据库大赛参赛经历，
-由于比赛中写的架构较为简略，所以在这里重构一下这个kv引擎。
 smallkv 是一个列存的、基于LSM架构的存储引擎。
 
 **项目正在疯狂迭代中！！**
